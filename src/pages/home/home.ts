@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
@@ -13,11 +13,11 @@ export class HomePage {
 
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
-    'canvasWidth': 500,
-    'canvasHeight': 300
+    'canvasWidth': this.plt.width(),
+    'canvasHeight': this.plt.height()
   };
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, public plt: Platform) {
     
   }
 
