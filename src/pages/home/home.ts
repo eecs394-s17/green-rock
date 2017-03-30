@@ -11,6 +11,8 @@ import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
 
+  clearColor: string = 'light';
+
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
     'canvasWidth': this.plt.width(),
@@ -35,5 +37,9 @@ export class HomePage {
   drawStart() {
     // will be notified of szimek/signature_pad's onBegin event
     console.log('begin drawing');
+  }
+
+  clearRock() {
+      this.signaturePad.clear();
   }
 }
