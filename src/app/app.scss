@@ -14,3 +14,42 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+ion-content, .toolbar-background {
+	background-color: #fff;
+	color: #FFFFFF;
+}
+
+ion-navbar {
+	border-bottom: #FFFFFF 1px solid;
+}
+
+.gallery-button {
+    bottom: 30px;
+    position: absolute;
+    width: 100%;    
+}
+
+ion-icon[name=images] {	
+    border: #FFFFFF 2px solid;    
+    border-radius: 50%;
+    background-color: #2155AA;    
+    font-size: 35px;
+		padding: 15px;	
+}
+ 
+p {
+	font-size: 20px;
+}
+
+img {
+	position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+signature-pad {
+	position: relative;
+}
