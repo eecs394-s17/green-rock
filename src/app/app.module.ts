@@ -6,12 +6,15 @@ import { HomePage } from '../pages/home/home';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { SignaturePadModule } from 'angular2-signaturepad';
+
 @NgModule({
   declarations: [
     MyApp,
     HomePage
   ],
   imports: [
+    SignaturePadModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
