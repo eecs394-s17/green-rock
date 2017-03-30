@@ -7,8 +7,6 @@
 </ion-header>
 
 <ion-content padding>
-  <button ion-button [color]="clearColor" (tap)="clearRock()">Clear</button>
-
   <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
 
 </ion-content>
@@ -36,7 +34,7 @@
         <ion-icon name="md-text"></ion-icon>
       </button>
       <!-- TODO: Change the color of the paintbrush when a new color is selected. -->
-      <button id="paintButton" ion-button icon-left icon-only (tap)="toggleStyleBar('paint')">
+      <button id="paintButton" color="{{ paintButtonColor }}" ion-button icon-left icon-only (tap)="toggleStyleBar('paint')">
         <ion-icon name="brush"></ion-icon>
       </button>
       <button ion-button icon-left icon-only>
@@ -44,6 +42,7 @@
       </button>
     </ion-buttons>
     <ion-buttons end>
+      <button ion-button (tap)="clearRock()" icon-right>Clear</button>
       <button ion-button icon-right>
         Publish!
         <ion-icon name="send"></ion-icon>

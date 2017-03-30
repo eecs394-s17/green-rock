@@ -11,7 +11,8 @@ import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
 
-  clearColor: string = 'light';
+  paintButtonColor = '';
+  lastPaintColor = '';
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
 
@@ -28,6 +29,7 @@ export class HomePage {
   ngAfterViewInit() {
     // this.signaturePad is now available
     this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
+    this.changePenColor('red');
     this.signaturePad.clear(); // invoke functions from szimek/signature_pad API
   }
 
@@ -49,14 +51,17 @@ export class HomePage {
     if (toolStr == 'text') {
         this.paintStyleShow = false;
         this.textStyleShow = !this.textStyleShow;
+        this.paintButtonColor = '';
     } else {
         this.textStyleShow = false;
+        this.paintButtonColor = this.lastPaintColor;
         this.paintStyleShow = !this.paintStyleShow;
     }
   }
 
   changePenColor(color) {
     this.signaturePad.set('penColor', color);
-    // this.paintStyleShow = false;
+    this.lastPaintColor = color;
+    this.paintButtonColor = color;
   }
 }
