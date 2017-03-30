@@ -16,25 +16,27 @@
   <ion-toolbar *ngIf="textStyleShow">
   </ion-toolbar>
   <ion-toolbar *ngIf="paintStyleShow">
-    <button id="red" color="red" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    <button id="red" color="red" class="colorButton" ion-button icon-left (tap)="changePenColor('red')">
     </button>
-    <button id="blue" color="blue" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    <button id="blue" color="blue" class="colorButton" ion-button icon-left (tap)="changePenColor('blue')">
     </button>
-    <button id="green" color="green" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    <button id="green" color="green" class="colorButton" ion-button icon-left (tap)="changePenColor('green')">
     </button>
-    <button id="yellow" color="yellow" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    <button id="yellow" color="yellow" class="colorButton" ion-button icon-left (tap)="changePenColor('yellow')">
     </button>
-    <button id="black" color="black" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    <button id="black" color="black" class="colorButton" ion-button icon-left (tap)="changePenColor('black')">
     </button>
-    <button id="white" color="white" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    <button id="white" color="white" class="colorButton" ion-button icon-left (tap)="changePenColor('white')">
     </button>
   </ion-toolbar>
   <ion-toolbar>
     <ion-buttons>
-      <button id="textButton" ion-button icon-left icon-only (tap)="toggleStyleBar($event)">
+      <!-- TODO: Change the color of the text icon when a new color is selected. -->
+      <button id="textButton" ion-button icon-left icon-only (tap)="toggleStyleBar('text')">
         <ion-icon name="md-text"></ion-icon>
       </button>
-      <button id="paintButton" ion-button icon-left icon-only (tap)="toggleStyleBar($event)">
+      <!-- TODO: Change the color of the paintbrush when a new color is selected. -->
+      <button id="paintButton" ion-button icon-left icon-only (tap)="toggleStyleBar('paint')">
         <ion-icon name="brush"></ion-icon>
       </button>
       <button ion-button icon-left icon-only>

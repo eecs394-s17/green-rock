@@ -46,12 +46,18 @@ export class HomePage {
     this.signaturePad.clear();
   }
 
-  toggleStyleBar() {
-    this.textStyleShow = !this.textStyleShow;
-    this.paintStyleShow = !this.paintStyleShow;
+  toggleStyleBar(toolStr) {
+    if (toolStr == 'text') {
+        this.paintStyleShow = false;
+        this.textStyleShow = !this.textStyleShow;
+    } else {
+        this.textStyleShow = false;
+        this.paintStyleShow = !this.paintStyleShow;
+    }
   }
 
-  changeColor(event) {
-      console.log("unimplemented");
+  changePenColor(color) {
+    this.signaturePad.set('penColor', color);
+    // this.paintStyleShow = false;
   }
 }
