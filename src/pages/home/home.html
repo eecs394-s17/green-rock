@@ -12,5 +12,7 @@
     If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
   </p>
 
+  <button ion-button [color]="clearColor" (click)="clearRock()">Clear</button>
+
   <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
 </ion-content>
