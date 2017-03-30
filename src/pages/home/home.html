@@ -16,6 +16,18 @@
   <ion-toolbar *ngIf="textStyleShow">
   </ion-toolbar>
   <ion-toolbar *ngIf="paintStyleShow">
+    <button id="red" color="red" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    </button>
+    <button id="blue" color="blue" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    </button>
+    <button id="green" color="green" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    </button>
+    <button id="yellow" color="yellow" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    </button>
+    <button id="black" color="black" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    </button>
+    <button id="white" color="white" class="colorButton" ion-button icon-left (tap)="changeColor($event)">
+    </button>
   </ion-toolbar>
   <ion-toolbar>
     <ion-buttons>

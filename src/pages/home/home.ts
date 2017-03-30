@@ -50,4 +50,8 @@ export class HomePage {
     this.textStyleShow = !this.textStyleShow;
     this.paintStyleShow = !this.paintStyleShow;
   }
+
+  changeColor(event) {
+      console.log("unimplemented");
+  }
 }
