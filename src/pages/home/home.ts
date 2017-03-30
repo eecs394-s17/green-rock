@@ -12,6 +12,8 @@ export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
 
   clearColor: string = 'light';
+  textStyleShow: boolean = false;
+  paintStyleShow: boolean = false;
 
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
@@ -41,6 +43,11 @@ export class HomePage {
   }
 
   clearRock() {
-      this.signaturePad.clear();
+    this.signaturePad.clear();
+  }
+
+  toggleStyleBar() {
+    this.textStyleShow = !this.textStyleShow;
+    this.paintStyleShow = !this.paintStyleShow;
   }
 }

@@ -7,26 +7,30 @@
 </ion-header>
 
 <ion-content padding>
-  <button ion-button [color]="clearColor" (click)="clearRock()">Clear</button>
+  <button ion-button [color]="clearColor" (tap)="clearRock()">Clear</button>
 
   <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
 
 </ion-content>
 <ion-footer>
+  <ion-toolbar *ngIf="textStyleShow">
+  </ion-toolbar>
+  <ion-toolbar *ngIf="paintStyleShow">
+  </ion-toolbar>
   <ion-toolbar>
-    <ion-buttons start>
-      <button ion-button icon-left color="royal" icon-only>
+    <ion-buttons>
+      <button id="textButton" ion-button icon-left icon-only (tap)="toggleStyleBar($event)">
         <ion-icon name="md-text"></ion-icon>
       </button>
-      <button ion-button icon-left color="royal" icon-only>
+      <button id="paintButton" ion-button icon-left icon-only (tap)="toggleStyleBar($event)">
         <ion-icon name="brush"></ion-icon>
       </button>
-      <button ion-button icon-left color="royal" icon-only>
+      <button ion-button icon-left icon-only>
         <ion-icon name="image"></ion-icon>
       </button>
     </ion-buttons>
     <ion-buttons end>
-      <button ion-button icon-right color="royal">
+      <button ion-button icon-right>
         Publish!
         <ion-icon name="send"></ion-icon>
       </button>
