@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-
 import { NavController, Platform } from 'ionic-angular';
-
+import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
 import { Camera } from 'ionic-native';
@@ -96,13 +95,15 @@ export class HomePage {
   }
 
   canvasTapped(event) {
-    console.log(event);
-    console.log(event.srcEvent.offsetX);
-    console.log(event.srcEvent.offsetY);
     this.textPositionX = event.srcEvent.offsetX + 'px';
     this.textPositionY = event.srcEvent.offsetY + 'px';
     //Focus as soon as you click.
     //Wrap text and size correctly.
     //Draggable.
+  }
+
+  editTextPosition() {
+    this.textPositionX = 0 + 'px';
+    this.textPositionY = 0 + 'px';
   }
 }

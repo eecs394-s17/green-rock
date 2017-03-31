@@ -18,6 +18,7 @@
 ion-content, .toolbar-background {
 	background-color: #fff;
 	color: #FFFFFF;
+	overflow:hidden;
 }
 
 #canvas-image {
@@ -49,8 +50,11 @@ signature-pad {
 #caption {
 	z-index: 3;
 	position: absolute;
-	max-width: 100%;
-	max-height: 100%;
+	width: 90%;
+	box-sizing: border-box;
+	background: transparent;
+	border-color: transparent;
+	resize: none;
 }
 
 .text-input {

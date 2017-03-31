@@ -6,7 +6,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content id="back">
+<ion-content id="back" scroll="false">
   <div id="canvas">
     <div class="gallery-image">
       <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
@@ -15,7 +15,7 @@
       </div>
     </div>
   </div>
-  <ion-textarea [style.top]="textPositionY" [style.left]="textPositionX" id="caption" placeholder="TEXT!"></ion-textarea>
+  <textarea autosize (tap)="editTextPosition()" [style.top]="textPositionY" [style.left]="textPositionX" id="caption" placeholder="Enter text..."></textarea>
 </ion-content>
 
 <ion-footer>
