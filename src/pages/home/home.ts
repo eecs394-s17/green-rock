@@ -21,7 +21,7 @@ export class HomePage {
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
     'canvasWidth': this.plt.width(),
-    'canvasHeight': this.plt.height()
+    'canvasHeight': this.plt.height() * 0.85
   };
 
   private imageSrc: string = '';
