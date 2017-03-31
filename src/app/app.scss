@@ -20,14 +20,25 @@ ion-content, .toolbar-background {
 	color: #FFFFFF;
 }
 
-img {
+#canvas-image {
 	position: absolute;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
+    z-index: 1;
 }
 
 signature-pad {
-	position: relative;
+	z-index: 2;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#canvas-text {
+	z-index: 3;
+	position: absolute;
+	top: 0;
+	left: 0;
 }

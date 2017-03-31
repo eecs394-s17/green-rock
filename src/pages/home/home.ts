@@ -48,8 +48,8 @@ export class HomePage {
 
   ngAfterViewInit() {
     // this.signaturePad is now available
-    this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
-    this.changePenColor('red');
+    // this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
+    this.changePaintColor('red');
     this.signaturePad.clear(); // invoke functions from szimek/signature_pad API
   }
 
@@ -78,7 +78,7 @@ export class HomePage {
     }
   }
 
-  changePenColor(color) {
+  changePaintColor(color) {
     this.signaturePad.set('penColor', color);
     this.lastPaintColor = color;
     this.paintButtonColor = color;

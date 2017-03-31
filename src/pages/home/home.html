@@ -9,8 +9,9 @@
 <ion-content id="back">
   <div id="canvas">
     <div class="gallery-image">
-      <img *ngIf="imageSrc" [src]="imageSrc"/>
+      <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
       <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
+      <div id="canvas-text">Text</div>
     </div>
   </div>
 </ion-content>
@@ -19,17 +20,17 @@
   <ion-toolbar *ngIf="textStyleShow">
   </ion-toolbar>
   <ion-toolbar *ngIf="paintStyleShow">
-    <button id="red" color="red" class="colorButton" ion-button icon-left (tap)="changePenColor('red')">
+    <button id="red" color="red" class="colorButton" ion-button icon-left (tap)="changePaintColor('red')">
     </button>
-    <button id="blue" color="blue" class="colorButton" ion-button icon-left (tap)="changePenColor('blue')">
+    <button id="blue" color="blue" class="colorButton" ion-button icon-left (tap)="changePaintColor('blue')">
     </button>
-    <button id="green" color="green" class="colorButton" ion-button icon-left (tap)="changePenColor('green')">
+    <button id="green" color="green" class="colorButton" ion-button icon-left (tap)="changePaintColor('green')">
     </button>
-    <button id="yellow" color="yellow" class="colorButton" ion-button icon-left (tap)="changePenColor('yellow')">
+    <button id="yellow" color="yellow" class="colorButton" ion-button icon-left (tap)="changePaintColor('yellow')">
     </button>
-    <button id="black" color="black" class="colorButton" ion-button icon-left (tap)="changePenColor('black')">
+    <button id="black" color="black" class="colorButton" ion-button icon-left (tap)="changePaintColor('black')">
     </button>
-    <button id="white" color="white" class="colorButton" ion-button icon-left (tap)="changePenColor('white')">
+    <button id="white" color="white" class="colorButton" ion-button icon-left (tap)="changePaintColor('white')">
     </button>
   </ion-toolbar>
   <ion-toolbar>
@@ -38,7 +39,6 @@
       <button id="textButton" ion-button icon-left icon-only (tap)="toggleStyleBar('text')">
         <ion-icon name="md-text"></ion-icon>
       </button>
-      <!-- TODO: Change the color of the paintbrush when a new color is selected. -->
       <button id="paintButton" color="{{ paintButtonColor }}" ion-button icon-left icon-only (tap)="toggleStyleBar('paint')">
         <ion-icon name="brush"></ion-icon>
       </button>
