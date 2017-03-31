@@ -97,9 +97,8 @@ export class HomePage {
   canvasTapped(event) {
     this.textPositionX = event.srcEvent.offsetX + 'px';
     this.textPositionY = event.srcEvent.offsetY + 'px';
-    //Focus as soon as you click.
-    //Wrap text and size correctly.
-    //Draggable.
+    //Focus as soon as you click(?)
+    //Draggable?
   }
 
   editTextPosition() {
