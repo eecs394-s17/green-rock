@@ -8,10 +8,9 @@
 
 <ion-content padding id="back">
   <div class="gallery-image">
-    <img [src]="imageSrc" />
+    <img *ngIf="imageSrc" [src]="imageSrc"/>
     <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
   </div>
-  
 </ion-content>
 
 <ion-footer>

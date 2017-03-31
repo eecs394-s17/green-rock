@@ -24,7 +24,8 @@ export class HomePage {
     'canvasHeight': this.plt.height()
   };
 
-  private imageSrc:string;
+  private imageSrc: string = '';
+
   constructor(public navCtrl: NavController, public plt: Platform) {
 
   }
@@ -41,8 +42,8 @@ export class HomePage {
     }
 
     Camera.getPicture(cameraOptions)
-    .then(file_uri => this.imageSrc = file_uri, 
-      err => console.log(err));   
+      .then(file_uri => this.imageSrc = file_uri, 
+      err => console.log(err));
   }
 
   ngAfterViewInit() {
