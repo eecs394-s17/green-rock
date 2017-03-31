@@ -6,12 +6,13 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding id="back">
-  <div class="gallery-image">
-    <img [src]="imageSrc" />
-    <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
+<ion-content id="back">
+  <div id="canvas">
+    <div class="gallery-image">
+      <img *ngIf="imageSrc" [src]="imageSrc"/>
+      <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
+    </div>
   </div>
-  
 </ion-content>
 
 <ion-footer>
