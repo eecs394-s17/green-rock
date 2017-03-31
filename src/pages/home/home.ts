@@ -17,6 +17,10 @@ export class HomePage {
   lastPaintColor = '';
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
+  zText: number = 3;
+  zPaint: number = 2;
+  textPositionX: string;
+  textPositionY: string;
 
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
@@ -50,6 +54,7 @@ export class HomePage {
     // this.signaturePad is now available
     // this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
     this.changePaintColor('red');
+    this.paintButtonColor = '';
     this.signaturePad.clear(); // invoke functions from szimek/signature_pad API
   }
 
@@ -68,10 +73,16 @@ export class HomePage {
   }
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
+        //activate text
+        this.zText = 3;
+        this.zPaint = 2;
         this.paintStyleShow = false;
         this.textStyleShow = !this.textStyleShow;
         this.paintButtonColor = '';
     } else {
+        //activate pen
+        this.zText = 2;
+        this.zPaint = 3;
         this.textStyleShow = false;
         this.paintButtonColor = this.lastPaintColor;
         this.paintStyleShow = !this.paintStyleShow;
@@ -82,5 +93,16 @@ export class HomePage {
     this.signaturePad.set('penColor', color);
     this.lastPaintColor = color;
     this.paintButtonColor = color;
+  }
+
+  canvasTapped(event) {
+    console.log(event);
+    console.log(event.srcEvent.offsetX);
+    console.log(event.srcEvent.offsetY);
+    this.textPositionX = event.srcEvent.offsetX + 'px';
+    this.textPositionY = event.srcEvent.offsetY + 'px';
+    //Focus as soon as you click.
+    //Wrap text and size correctly.
+    //Draggable.
   }
 }
