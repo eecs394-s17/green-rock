@@ -16,7 +16,7 @@
     </div>
   </div>
   <!-- TODO: Fix initial position of textarea (or hide it or something). -->
-  <textarea autosize (tap)="editTextPosition()" [style.top]="textPositionY" [style.left]="textPositionX" [style.color]="textColor" id="caption" placeholder="Enter text..." ></textarea>
+  <textarea autosize (tap)="editTextPosition()" [style.top]="textPositionY" [style.left]="textPositionX" [style.color]="textColor" id="caption" placeholder="{{ textPlaceholder }}" ></textarea>
 </ion-content>
 <ion-footer>
   <ion-toolbar *ngIf="textStyleShow">
