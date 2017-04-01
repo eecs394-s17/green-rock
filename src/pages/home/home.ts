@@ -16,6 +16,7 @@ export class HomePage {
   lastPaintColor = '';
   textButtonColor = '';
   lastTextColor = '';
+  textColor = '';
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
   zText: number = 3;
@@ -100,6 +101,7 @@ export class HomePage {
   }
 
   changeTextColor(color){
+    this.textColor = color;
     this.lastTextColor = color;
     this.textButtonColor = color;
   }
