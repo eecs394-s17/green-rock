@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { NavController, Platform, Content } from 'ionic-angular';
 import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
@@ -11,7 +11,9 @@ import { Camera } from 'ionic-native';
 })
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
+  @ViewChild(Content) canvas: Content;
 
+  canvasHeight: string;
   colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
   paintButtonColor = '';
   lastPaintColor = '';
@@ -33,7 +35,6 @@ export class HomePage {
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
     'canvasWidth': this.plt.width(),
-    'canvasHeight': this.plt.height() * 0.85
   };
 
   private imageSrc: string = '';
@@ -58,9 +59,15 @@ export class HomePage {
       err => console.log(err));
   }
 
+  ionViewDidEnter() {
+    console.log(this.canvas.contentHeight);
+    this.canvasHeight = this.canvas.contentHeight + 'px';
+    this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
+  }
+
   ngAfterViewInit() {
     // this.signaturePad is now available
-    // this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
+    // can set szimek/signature_pad options at runtime here
     this.changeTextColor('red');
     this.changePaintColor('red');
     this.paintButtonColor = '';

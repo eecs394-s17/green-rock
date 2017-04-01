@@ -6,17 +6,16 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content id="back" scroll="false">
-  <div id="canvas">
-    <div class="gallery-image">
-      <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
-      <signature-pad [style.zIndex]="zPaint" [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
-      <div id="canvas-text" [style.zIndex]="zText" (tap)="canvasTapped($event)">
-      </div>
+<ion-content id="back">
+  <div id="canvas" [style.height]="canvasHeight">
+    <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
+    <signature-pad [style.zIndex]="zPaint" [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
+    <div id="canvas-text" [style.zIndex]="zText" (tap)="canvasTapped($event)">
     </div>
   </div>
-  <textarea autosize [readonly]="textReadOnly ? textReadOnly : null" (tap)="editTextPosition()" (press)="editText()" [style.top]="textPositionY" [style.left]="textPositionX" [style.color]="textColor" [(ngModel)]="textValue" id="caption" placeholder="{{ textPlaceholder }}" ></textarea>
+  <textarea *ngIf="textPlaceholder || textValue" autosize [readonly]="textReadOnly ? textReadOnly : null" (tap)="editTextPosition()" (press)="editText()" [style.top]="textPositionY" [style.left]="textPositionX" [style.color]="textColor" [(ngModel)]="textValue" id="caption" placeholder="{{ textPlaceholder }}" ></textarea>
 </ion-content>
+
 <ion-footer>
   <ion-toolbar *ngIf="textStyleShow || paintStyleShow">
     <button *ngFor="let color of colors" color="{{color}}" class="colorButton" ion-button icon-left (tap)="changeColorFromToolbar(color)">

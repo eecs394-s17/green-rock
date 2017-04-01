@@ -2,41 +2,40 @@ page-home {
 
 }
 
+.scroll-content {
+	overflow-y: hidden;
+}
+
 .colorButton {
 	margin: 0;
 }
 
 #canvas {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
 	height: 100%;
-}
-
-.gallery-image {
-	flex-basis: 85%;
-	margin: auto 0;
 }
 
 #canvas-image {
 	position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
+    height: inherit;
     width: 100%;
     z-index: 1;
 }
 
 signature-pad {
-	// z-index: 2;
+	z-index: 2;
 	position: absolute;
 	top: 0;
 	left: 0;
 }
 
 #canvas-text {
-	// z-index: 3;
+	z-index: 3;
 	position: absolute;
 	top: 0;
 	left: 0;
