@@ -17,15 +17,17 @@ export class HomePage {
   textButtonColor = '';
   lastTextColor = '';
   textColor = '';
-  textPlaceholder = '';
+  textPlaceholder: string = 'Hold to start entering text...';
   textValue: string = "";
-  textReadOnly = null;
+  textReadOnly: boolean = true;
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
   zText: number = 3;
   zPaint: number = 2;
   textPositionX: string;
   textPositionY: string;
+  lastTextPositionX: string;
+  lastTextPositionY: string;
 
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
@@ -58,7 +60,7 @@ export class HomePage {
   ngAfterViewInit() {
     // this.signaturePad is now available
     // this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
-    this.changeTextColor('black');
+    this.changeTextColor('red');
     this.changePaintColor('red');
     this.paintButtonColor = '';
     this.signaturePad.clear(); // invoke functions from szimek/signature_pad API
@@ -87,8 +89,8 @@ export class HomePage {
         this.textButtonColor = this.lastTextColor;
         this.paintStyleShow = false;
         this.paintButtonColor = '';
-        this.textPlaceholder = 'Enter text...';
-        this.textReadOnly = null;
+        this.textPlaceholder = 'Hold to start entering text...';
+        this.textReadOnly = false;
     } else {
         //activate pen
         this.zText = 2;
@@ -117,6 +119,7 @@ export class HomePage {
   canvasTapped(event) {
     // this.textPositionX = event.srcEvent.offsetX + 'px';
     this.textPositionY = event.srcEvent.offsetY + 'px';
+    this.textReadOnly = true;
     //Focus as soon as you click(?)
     //Draggable?
   }
@@ -124,5 +127,10 @@ export class HomePage {
   editTextPosition() {
     // this.textPositionX = 0 + 'px';
     // this.textPositionY = 0 + 'px';
+  }
+
+  editText() {
+    console.log("Allowing text to be editable...");
+    this.textReadOnly = false;
   }
 }
