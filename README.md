@@ -18,9 +18,11 @@ To check your npm version
 - Then install the correct version of node.
 
     
+
     nvm install 7.3.0
 
 ### To change your node version to '4.5.0' from a different version (Linux) ###
+
     npm install npm@4.5.0 -g
 
 
@@ -45,7 +47,7 @@ Click here for a [quick overview of Git](https://git-scm.com/book/en/v2/Getting-
 Read [this article](http://nvie.com/posts/a-successful-git-branching-model/) to understand the branching structure we are using for our project. Here is the last of the following branches we will have: 
 - 'master' – this is our production branch which will be showed to users
 - 'stable' – this is our branch that should theoretically be bug free (similar to develop branch from the article)
-- '<feature name>' – this is a branch where you work on a particular feature. This should be a branch off of stable and then be merged back into stable.
+- '&lt;feature name&gt;' – this is a branch where you work on a particular feature. This should be a branch off of stable and then be merged back into stable.
 
 You should really only be working on stable and feature branches. Together as a team we will usually push to master - just to make sure everything is ok.
 
