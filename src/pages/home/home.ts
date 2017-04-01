@@ -12,6 +12,7 @@ import { Camera } from 'ionic-native';
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
 
+  colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
   paintButtonColor = '';
   lastPaintColor = '';
   textButtonColor = '';
@@ -82,7 +83,6 @@ export class HomePage {
   }
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
-        //activate text
         this.zText = 3;
         this.zPaint = 2;
         this.textStyleShow = !this.textStyleShow;
@@ -91,8 +91,7 @@ export class HomePage {
         this.paintButtonColor = '';
         this.textPlaceholder = 'Hold to start entering text...';
         this.textReadOnly = false;
-    } else {
-        //activate pen
+    } else if (toolStr == 'paint') {
         this.zText = 2;
         this.zPaint = 3;
         this.paintStyleShow = !this.paintStyleShow;
@@ -101,6 +100,14 @@ export class HomePage {
         this.textButtonColor = '';
         this.textPlaceholder = '';
         this.textReadOnly = true;
+    }
+  }
+
+  changeColorFromToolbar(color) {
+    if (this.textStyleShow) {
+      this.changeTextColor(color);
+    } else if (this.paintStyleShow) {
+      this.changePaintColor(color);
     }
   }
 

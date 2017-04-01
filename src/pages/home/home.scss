@@ -19,7 +19,46 @@ page-home {
 	margin: auto 0;
 }
 
-#caption{
+#canvas-image {
+	position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+
+signature-pad {
+	// z-index: 2;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#canvas-text {
+	// z-index: 3;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: transparent;
+	width: 100%;
+	height: 100%;
+}
+
+#caption {
+	z-index: 3;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	box-sizing: border-box;
+	background: transparent;
+	border-color: transparent;
+	resize: none;
+	text-align: center;
 	// background-color:rgba(0,0,0,0.4);
-	//text-align: center;
+}
+
+.text-input {
+	margin: 0;
 }
