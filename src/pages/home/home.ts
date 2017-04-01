@@ -19,6 +19,7 @@ export class HomePage {
   textColor = '';
   textPlaceholder = '';
   textValue: string = "";
+  textReadOnly = null;
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
   zText: number = 3;
@@ -87,6 +88,7 @@ export class HomePage {
         this.paintStyleShow = false;
         this.paintButtonColor = '';
         this.textPlaceholder = 'Enter text...';
+        this.textReadOnly = null;
     } else {
         //activate pen
         this.zText = 2;
@@ -95,6 +97,8 @@ export class HomePage {
         this.paintButtonColor = this.lastPaintColor;
         this.textStyleShow = false;
         this.textButtonColor = '';
+        this.textPlaceholder = '';
+        this.textReadOnly = true;
     }
   }
 
