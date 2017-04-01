@@ -18,6 +18,7 @@ export class HomePage {
   lastTextColor = '';
   textColor = '';
   textPlaceholder = '';
+  textValue: string = "";
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
   zText: number = 3;
@@ -74,6 +75,7 @@ export class HomePage {
 
   clearRock() {
     this.signaturePad.clear();
+    this.textValue = "";
   }
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
