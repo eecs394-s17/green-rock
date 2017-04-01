@@ -28,7 +28,7 @@ export class HomePage {
   zText: number = 3;
   zPaint: number = 2;
   textPositionX: string;
-  textPositionY: string;
+  textPositionY: string = '25%';
   lastTextPositionX: string;
   lastTextPositionY: string;
 
@@ -87,6 +87,7 @@ export class HomePage {
   clearRock() {
     this.signaturePad.clear();
     this.textValue = "";
+    this.imageSrc = '';
   }
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
