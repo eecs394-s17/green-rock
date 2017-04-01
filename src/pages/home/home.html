@@ -49,7 +49,7 @@
   </ion-toolbar>
   <ion-toolbar>
     <ion-buttons>
-      <button id="textButton" [style.background-color]=textButtonColor ion-button icon-left icon-only (tap)="toggleStyleBar('text')">
+      <button id="textButton" color="{{ textButtonColor }}" ion-button icon-left icon-only (tap)="toggleStyleBar('text')">
         <ion-icon name="md-text"></ion-icon>
       </button>
       <button id="paintButton" color="{{ paintButtonColor }}" ion-button icon-left icon-only (tap)="toggleStyleBar('paint')">
