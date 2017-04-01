@@ -14,6 +14,8 @@ export class HomePage {
 
   paintButtonColor = '';
   lastPaintColor = '';
+  textButtonColor = '';
+  lastTextColor = '';
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
   zText: number = 3;
@@ -52,6 +54,7 @@ export class HomePage {
   ngAfterViewInit() {
     // this.signaturePad is now available
     // this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
+    this.changeTextColor('white');
     this.changePaintColor('red');
     this.paintButtonColor = '';
     this.signaturePad.clear(); // invoke functions from szimek/signature_pad API
@@ -75,16 +78,18 @@ export class HomePage {
         //activate text
         this.zText = 3;
         this.zPaint = 2;
-        this.paintStyleShow = false;
         this.textStyleShow = !this.textStyleShow;
+        this.textButtonColor = this.lastTextColor;
+        this.paintStyleShow = false;
         this.paintButtonColor = '';
     } else {
         //activate pen
         this.zText = 2;
         this.zPaint = 3;
-        this.textStyleShow = false;
-        this.paintButtonColor = this.lastPaintColor;
         this.paintStyleShow = !this.paintStyleShow;
+        this.paintButtonColor = this.lastPaintColor;
+        this.textStyleShow = false;
+        this.textButtonColor = '';
     }
   }
 
@@ -92,6 +97,11 @@ export class HomePage {
     this.signaturePad.set('penColor', color);
     this.lastPaintColor = color;
     this.paintButtonColor = color;
+  }
+
+  changeTextColor(color){
+    this.lastTextColor = color;
+    this.textButtonColor = color;
   }
 
   canvasTapped(event) {
