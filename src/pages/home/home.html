@@ -1,48 +1,35 @@
-<ion-header>
+<!-- <ion-header>
   <ion-navbar>
     <ion-title>
       Virtual Rock
     </ion-title>
   </ion-navbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content id="back">
-  <div id="canvas">
-    <div class="gallery-image">
-      <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
-      <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
-      <div id="canvas-text">Text</div>
+  <div id="canvas" [style.height]="canvasHeight">
+    <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
+    <signature-pad [style.zIndex]="zPaint" [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
+    <div id="canvas-text" [style.zIndex]="zText" (tap)="canvasTapped($event)">
     </div>
   </div>
+  <textarea *ngIf="textPlaceholder || textValue" autosize [readonly]="textReadOnly ? textReadOnly : null" (tap)="editTextPosition()" (press)="editText()" [style.top]="textPositionY" [style.left]="textPositionX" [style.color]="textColor" [(ngModel)]="textValue" id="caption" placeholder="{{ textPlaceholder }}" ></textarea>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar *ngIf="textStyleShow">
-  </ion-toolbar>
-  <ion-toolbar *ngIf="paintStyleShow">
-    <button id="red" color="red" class="colorButton" ion-button icon-left (tap)="changePaintColor('red')">
-    </button>
-    <button id="blue" color="blue" class="colorButton" ion-button icon-left (tap)="changePaintColor('blue')">
-    </button>
-    <button id="green" color="green" class="colorButton" ion-button icon-left (tap)="changePaintColor('green')">
-    </button>
-    <button id="yellow" color="yellow" class="colorButton" ion-button icon-left (tap)="changePaintColor('yellow')">
-    </button>
-    <button id="black" color="black" class="colorButton" ion-button icon-left (tap)="changePaintColor('black')">
-    </button>
-    <button id="white" color="white" class="colorButton" ion-button icon-left (tap)="changePaintColor('white')">
+  <ion-toolbar *ngIf="textStyleShow || paintStyleShow">
+    <button *ngFor="let color of colors" color="{{color}}" class="colorButton" ion-button icon-left (tap)="changeColorFromToolbar(color)">
     </button>
   </ion-toolbar>
   <ion-toolbar>
     <ion-buttons>
-      <!-- TODO: Change the color of the text icon when a new color is selected. -->
-      <button id="textButton" ion-button icon-left icon-only (tap)="toggleStyleBar('text')">
+      <button id="textButton" color="{{ textButtonColor }}" ion-button icon-left icon-only (tap)="toggleStyleBar('text')">
         <ion-icon name="md-text"></ion-icon>
       </button>
       <button id="paintButton" color="{{ paintButtonColor }}" ion-button icon-left icon-only (tap)="toggleStyleBar('paint')">
         <ion-icon name="brush"></ion-icon>
       </button>
-      <button ion-button icon-left color="royal" on-tap="openGallery()" icon-only>
+      <button showWhen="android,ios" ion-button icon-left color="royal" on-tap="openGallery()" icon-only>
         <ion-icon name="image"></ion-icon>
       </button>
     </ion-buttons>

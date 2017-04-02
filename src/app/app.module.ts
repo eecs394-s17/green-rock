@@ -1,4 +1,5 @@
 import { NgModule, ErrorHandler } from '@angular/core';
+import { AutosizeModule } from 'angular2-autosize';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -15,6 +16,7 @@ import { SignaturePadModule } from 'angular2-signaturepad';
   ],
   imports: [
     SignaturePadModule,
+    AutosizeModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
