@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NavController, Platform, Content } from 'ionic-angular';
 import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
-import { Camera } from 'ionic-native';
+import { Camera, Keyboard } from 'ionic-native';
 
 @Component({
   selector: 'page-home',
@@ -39,8 +39,19 @@ export class HomePage {
 
   private imageSrc: string = '';
 
-  constructor(public navCtrl: NavController, public plt: Platform) {
+  constructor(public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef) {
+    Keyboard.onKeyboardShow().subscribe(data => { 
+      this.lastTextPositionY = this.textPositionY;
+      this.lastTextPositionX = this.textPositionX;
+      this.textPositionX = '';
+      this.textPositionY = '50%';
+      chRef.detectChanges();
+    });
 
+    Keyboard.onKeyboardHide().subscribe(data => {
+      this.textPositionX = this.lastTextPositionX;
+      this.textPositionY = this.lastTextPositionY;
+    });
   }
 
   openGallery (): void {
@@ -140,6 +151,7 @@ export class HomePage {
   }
 
   editTextPosition() {
+    console.log("tapped");
     // this.textPositionX = 0 + 'px';
     // this.textPositionY = 0 + 'px';
   }
