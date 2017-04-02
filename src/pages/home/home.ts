@@ -24,6 +24,7 @@ export class HomePage {
   textPlaceholder: string = 'Hold to start entering text...';
   textValue: string = "";
   textReadOnly: boolean = true;
+  toolbarShow: boolean = false;
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
   zText: number = 3;
@@ -80,6 +81,7 @@ export class HomePage {
     console.log(this.canvas.contentHeight);
     this.canvasHeight = this.canvas.contentHeight + 'px';
     this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
+    this.toolbarShow = true;
   }
 
   ngAfterViewInit() {

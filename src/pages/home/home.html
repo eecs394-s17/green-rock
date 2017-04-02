@@ -6,10 +6,13 @@
     </div>
   </div>
   <textarea *ngIf="textPlaceholder || textValue" autosize [readonly]="textReadOnly ? textReadOnly : null" (tap)="editTextPosition()" (press)="editText()" [style.top]="textPositionY" [style.left]="textPositionX" [style.color]="textColor" [(ngModel)]="textValue" id="caption" placeholder="{{ textPlaceholder }}" ></textarea>
+  <ion-fab right bottom *ngIf="!toolbarShow">
+    <button ion-fab (tap)="toolbarShow = true"><ion-icon name="create"></ion-icon></button>
+  </ion-fab>
 </ion-content>
 
-<ion-footer>
-  <ion-toolbar *ngIf="textStyleShow || paintStyleShow">
+<ion-footer *ngIf="toolbarShow">
+  <ion-toolbar *ngIf="(textStyleShow || paintStyleShow) && toolbarShow">
     <button *ngFor="let color of colors" color="{{color}}" class="colorButton" ion-button icon-left (tap)="changeColorFromToolbar(color)">
     </button>
   </ion-toolbar>
@@ -26,6 +29,7 @@
       </button>
     </ion-buttons>
     <ion-buttons end>
+      <button ion-button (tap)="toolbarShow = false" icon-right>Hide Toolbar</button>
       <button ion-button (tap)="clearRock()" icon-right>Clear</button>
       <button ion-button icon-right>
         Publish!
