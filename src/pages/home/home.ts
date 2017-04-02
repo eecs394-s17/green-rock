@@ -1,10 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
-
-import { NavController, Platform } from 'ionic-angular';
-
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { NavController, Platform, Content } from 'ionic-angular';
+import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
-import { Camera } from 'ionic-native';
+import { Camera, Keyboard } from 'ionic-native';
 
 @Component({
   selector: 'page-home',
@@ -12,22 +11,47 @@ import { Camera } from 'ionic-native';
 })
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
+  @ViewChild(Content) canvas: Content;
 
+  canvasHeight: string;
+  colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
   paintButtonColor = '';
   lastPaintColor = '';
+  textButtonColor = '';
+  lastTextColor = '';
+  textColor = '';
+  textPlaceholder: string = 'Hold to start entering text...';
+  textValue: string = "";
+  textReadOnly: boolean = true;
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
+  zText: number = 3;
+  zPaint: number = 2;
+  textPositionX: string;
+  textPositionY: string = '25%';
+  lastTextPositionX: string;
+  lastTextPositionY: string;
 
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
     'canvasWidth': this.plt.width(),
-    'canvasHeight': this.plt.height() * 0.85
   };
 
   private imageSrc: string = '';
 
-  constructor(public navCtrl: NavController, public plt: Platform) {
+  constructor(public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef) {
+    Keyboard.onKeyboardShow().subscribe(data => { 
+      this.lastTextPositionY = this.textPositionY;
+      this.lastTextPositionX = this.textPositionX;
+      this.textPositionX = '';
+      this.textPositionY = '50%';
+      chRef.detectChanges();
+    });
 
+    Keyboard.onKeyboardHide().subscribe(data => {
+      this.textPositionX = this.lastTextPositionX;
+      this.textPositionY = this.lastTextPositionY;
+    });
   }
 
   openGallery (): void {
@@ -46,10 +70,18 @@ export class HomePage {
       err => console.log(err));
   }
 
+  ionViewDidEnter() {
+    console.log(this.canvas.contentHeight);
+    this.canvasHeight = this.canvas.contentHeight + 'px';
+    this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
+  }
+
   ngAfterViewInit() {
     // this.signaturePad is now available
-    // this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
+    // can set szimek/signature_pad options at runtime here
+    this.changeTextColor('red');
     this.changePaintColor('red');
+    this.paintButtonColor = '';
     this.signaturePad.clear(); // invoke functions from szimek/signature_pad API
   }
 
@@ -65,16 +97,36 @@ export class HomePage {
 
   clearRock() {
     this.signaturePad.clear();
+    this.textValue = "";
+    this.imageSrc = '';
   }
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
-        this.paintStyleShow = false;
+        this.zText = 3;
+        this.zPaint = 2;
         this.textStyleShow = !this.textStyleShow;
+        this.textButtonColor = this.lastTextColor;
+        this.paintStyleShow = false;
         this.paintButtonColor = '';
-    } else {
-        this.textStyleShow = false;
-        this.paintButtonColor = this.lastPaintColor;
+        this.textPlaceholder = 'Hold to start entering text...';
+        this.textReadOnly = false;
+    } else if (toolStr == 'paint') {
+        this.zText = 2;
+        this.zPaint = 3;
         this.paintStyleShow = !this.paintStyleShow;
+        this.paintButtonColor = this.lastPaintColor;
+        this.textStyleShow = false;
+        this.textButtonColor = '';
+        this.textPlaceholder = '';
+        this.textReadOnly = true;
+    }
+  }
+
+  changeColorFromToolbar(color) {
+    if (this.textStyleShow) {
+      this.changeTextColor(color);
+    } else if (this.paintStyleShow) {
+      this.changePaintColor(color);
     }
   }
 
@@ -82,5 +134,30 @@ export class HomePage {
     this.signaturePad.set('penColor', color);
     this.lastPaintColor = color;
     this.paintButtonColor = color;
+  }
+
+  changeTextColor(color){
+    this.textColor = color;
+    this.lastTextColor = color;
+    this.textButtonColor = color;
+  }
+
+  canvasTapped(event) {
+    // this.textPositionX = event.srcEvent.offsetX + 'px';
+    this.textPositionY = event.srcEvent.offsetY + 'px';
+    this.textReadOnly = true;
+    //Focus as soon as you click(?)
+    //Draggable?
+  }
+
+  editTextPosition() {
+    console.log("tapped");
+    // this.textPositionX = 0 + 'px';
+    // this.textPositionY = 0 + 'px';
+  }
+
+  editText() {
+    console.log("Allowing text to be editable...");
+    this.textReadOnly = false;
   }
 }
