@@ -27,6 +27,8 @@
     "@ionic/storage": "2.0.0",
     "angular2-autosize": "git+https://github.com/chrum/angular2-autosize.git",
     "angular2-signaturepad": "^2.2.1",
+    "angularfire2": "^2.0.0-beta.8",
+    "firebase": "^3.7.4",
     "ionic-angular": "2.3.0",
     "ionic-native": "^2.9.0",
     "ionicons": "3.0.0",

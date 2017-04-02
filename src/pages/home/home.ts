@@ -1,5 +1,6 @@
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NavController, Platform, Content } from 'ionic-angular';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
@@ -32,6 +33,8 @@ export class HomePage {
   lastTextPositionX: string;
   lastTextPositionY: string;
 
+  items: FirebaseListObservable<any[]>;
+
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
     'canvasWidth': this.plt.width(),
@@ -39,7 +42,10 @@ export class HomePage {
 
   private imageSrc: string = '';
 
-  constructor(public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef) {
+  constructor(public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire) {
+    this.items = af.database.list('/rock1');
+    console.log(this.items);
+
     Keyboard.onKeyboardShow().subscribe(data => { 
       this.lastTextPositionY = this.textPositionY;
       this.lastTextPositionX = this.textPositionX;
