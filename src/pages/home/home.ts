@@ -1,16 +1,14 @@
 import { Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
 import { NavController, Platform, Content } from 'ionic-angular';
-import { AngularFire, FirebaseListObservable, FirebaseApp } from 'angularfire2';
+import { AngularFire, FirebaseObjectObservable, FirebaseApp } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
-import { Camera, Keyboard, Screenshot } from 'ionic-native';
-// import { Screenshot } from '@ionic-native/screenshot';
+import { Camera, Keyboard, Screenshot, Toast } from 'ionic-native';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [Screenshot]
 })
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
@@ -23,7 +21,7 @@ export class HomePage {
   textButtonColor = '';
   lastTextColor = '';
   textColor = '';
-  textPlaceholder: string = 'Hold to start entering text...';
+  textPlaceholder: string = '';
   textValue: string = "";
   textReadOnly: boolean = true;
   toolbarShow: boolean = false;
@@ -37,7 +35,7 @@ export class HomePage {
   lastTextPositionX: string;
   lastTextPositionY: string;
 
-  items: FirebaseListObservable<any[]>;
+  rock: FirebaseObjectObservable<any[]>;
   storageRef;
 
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
@@ -48,9 +46,23 @@ export class HomePage {
   private imageSrc: string = '';
 
   constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire ) {
-    this.items = af.database.list('/rock1');
-    this.storageRef = firebaseApp.storage().ref().child('rock1.png');
-    console.log(this.items);
+    this.rock = af.database.object('/rock1', { preserveSnapshot: true});
+
+    this.rock.subscribe(snapshot => {
+      //Need the line below to get rid of TypeScript compiler complaining about an error.
+      var snap: any = snapshot;
+      console.log(snapshot.constructor.name);
+      console.log(snap.val());
+      var t = this;
+      this.storageRef = firebaseApp.storage().ref().child(snap.val().image);
+      this.storageRef.getDownloadURL().then(function(url) {
+        console.log(url);
+        t.imageSrc = url;
+        t.chRef.detectChanges();
+      }).catch(function(error) {
+        console.log(error);
+      });
+    });
 
     Keyboard.onKeyboardShow().subscribe(data => { 
       this.lastTextPositionY = this.textPositionY;
@@ -156,6 +168,7 @@ export class HomePage {
   }
 
   canvasTapped(event) {
+    this.textPlaceholder = 'Hold to start entering text...';
     // this.textPositionX = event.srcEvent.offsetX + 'px';
     this.textPositionY = event.srcEvent.offsetY + 'px';
     this.textReadOnly = true;
@@ -176,23 +189,31 @@ export class HomePage {
 
   publishRock() {
     this.publishing = true;
+    if (this.textValue) {
+      this.textPlaceholder = '';
+    }
     this.chRef.detectChanges();
-    Screenshot.URI(100).then(res => {
+    
+    var t = this;
+    //Timeout guarantees that toolbar and placeholder disappear before screenshot
+    setTimeout(function() {
+      Screenshot.URI(100).then(res => {
       console.log(res);
       //Upload image using uri to firebase storage
-      var message = res.URI;
-      this.storageRef.putString(message, 'data_url').then(function(snapshot) {
+      t.storageRef.putString(res.URI, 'data_url').then(function(snapshot) {
+        Toast.show('Rock painted!', '5000', 'center').subscribe(
+          toast => {
+            console.log(toast);
+          });
         console.log('Uploaded a data_url string!');
+        t.publishing = false;
       });
       //Update database with image path and timestamp
+      var time = (new Date().getTime());
+      console.log(time);
+      t.rock.set({ latitude: 1, longitude: 1, image: 'rock1.png', timestamp: time });
     })
     .catch(err => { console.error(err) });
-    // Screenshot.save('jpg', 100, 'screenshot.jpg').then(res => {
-    //   console.log(res.filePath);
-    //   //Upload image using uri to firebase storage
-    //   //Update database with image path and timestamp
-    //   this.publishing = false;
-    // })
-    // .catch(err => { console.error(err) });
+    }, 100);
   }
 }

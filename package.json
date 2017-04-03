@@ -25,6 +25,7 @@
     "@ionic-native/screenshot": "^3.4.4",
     "@ionic-native/splash-screen": "3.1.0",
     "@ionic-native/status-bar": "3.1.0",
+    "@ionic-native/toast": "^3.4.4",
     "@ionic/storage": "2.0.0",
     "angular2-autosize": "git+https://github.com/chrum/angular2-autosize.git",
     "angular2-signaturepad": "^2.2.1",
