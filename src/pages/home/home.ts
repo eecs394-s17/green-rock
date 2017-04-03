@@ -1,6 +1,6 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
 import { NavController, Platform, Content } from 'ionic-angular';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AngularFire, FirebaseListObservable, FirebaseApp } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
@@ -38,6 +38,7 @@ export class HomePage {
   lastTextPositionY: string;
 
   items: FirebaseListObservable<any[]>;
+  storageRef;
 
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
@@ -46,8 +47,9 @@ export class HomePage {
 
   private imageSrc: string = '';
 
-  constructor(public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire ) {
+  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire ) {
     this.items = af.database.list('/rock1');
+    this.storageRef = firebaseApp.storage().ref().child('rock1.png');
     console.log(this.items);
 
     Keyboard.onKeyboardShow().subscribe(data => { 
@@ -175,19 +177,22 @@ export class HomePage {
   publishRock() {
     this.publishing = true;
     this.chRef.detectChanges();
-    // Screenshot.URI(100).then(res => {
-    //   console.log('WE outchea');
-    //   console.log(res);
-    //   //Upload image using uri to firebase storage
-    //   //Update database with image path and timestamp
-    // })
-    // .catch(err => { console.error(err) });
-    Screenshot.save('jpg', 100, 'screenshot.jpg').then(res => {
-      console.log(res.filePath);
+    Screenshot.URI(100).then(res => {
+      console.log(res);
       //Upload image using uri to firebase storage
+      var message = res.URI;
+      this.storageRef.putString(message, 'data_url').then(function(snapshot) {
+        console.log('Uploaded a data_url string!');
+      });
       //Update database with image path and timestamp
-      this.publishing = false;
     })
     .catch(err => { console.error(err) });
+    // Screenshot.save('jpg', 100, 'screenshot.jpg').then(res => {
+    //   console.log(res.filePath);
+    //   //Upload image using uri to firebase storage
+    //   //Update database with image path and timestamp
+    //   this.publishing = false;
+    // })
+    // .catch(err => { console.error(err) });
   }
 }
