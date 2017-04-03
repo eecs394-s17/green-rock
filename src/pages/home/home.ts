@@ -51,7 +51,6 @@ export class HomePage {
     this.rock.subscribe(snapshot => {
       //Need the line below to get rid of TypeScript compiler complaining about an error.
       var snap: any = snapshot;
-      console.log(snapshot.constructor.name);
       console.log(snap.val());
       var t = this;
       this.storageRef = firebaseApp.storage().ref().child(snap.val().image);
