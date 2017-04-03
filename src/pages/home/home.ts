@@ -4,11 +4,13 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
-import { Camera, Keyboard } from 'ionic-native';
+import { Camera, Keyboard, Screenshot } from 'ionic-native';
+// import { Screenshot } from '@ionic-native/screenshot';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
+  providers: [Screenshot]
 })
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
@@ -27,6 +29,7 @@ export class HomePage {
   toolbarShow: boolean = false;
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
+  publishing: boolean = false;
   zText: number = 3;
   zPaint: number = 2;
   textPositionX: string;
@@ -43,7 +46,7 @@ export class HomePage {
 
   private imageSrc: string = '';
 
-  constructor(public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire) {
+  constructor(public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire ) {
     this.items = af.database.list('/rock1');
     console.log(this.items);
 
@@ -167,5 +170,24 @@ export class HomePage {
   editText() {
     console.log("Allowing text to be editable...");
     this.textReadOnly = false;
+  }
+
+  publishRock() {
+    this.publishing = true;
+    this.chRef.detectChanges();
+    // Screenshot.URI(100).then(res => {
+    //   console.log('WE outchea');
+    //   console.log(res);
+    //   //Upload image using uri to firebase storage
+    //   //Update database with image path and timestamp
+    // })
+    // .catch(err => { console.error(err) });
+    Screenshot.save('jpg', 100, 'screenshot.jpg').then(res => {
+      console.log(res.filePath);
+      //Upload image using uri to firebase storage
+      //Update database with image path and timestamp
+      this.publishing = false;
+    })
+    .catch(err => { console.error(err) });
   }
 }
