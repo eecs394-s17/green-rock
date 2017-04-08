@@ -6,12 +6,12 @@
     </div>
   </div>
   <textarea *ngIf="textPlaceholder || textValue" autosize [readonly]="textReadOnly ? textReadOnly : null" (tap)="editTextPosition()" (press)="editText()" [style.top]="textPositionY" [style.left]="textPositionX" [style.color]="textColor" [(ngModel)]="textValue" id="caption" placeholder="{{ textPlaceholder }}" ></textarea>
-  <ion-fab right bottom *ngIf="!toolbarShow && !publishing">
+  <ion-fab right bottom *ngIf="!toolbarShow && !published">
     <button ion-fab (tap)="toolbarShow = true"><ion-icon name="create"></ion-icon></button>
   </ion-fab>
 </ion-content>
 
-<ion-footer *ngIf="toolbarShow && !publishing">
+<ion-footer *ngIf="toolbarShow && !published">
   <ion-toolbar *ngIf="(textStyleShow || paintStyleShow) && toolbarShow">
     <button *ngFor="let color of colors" color="{{color}}" class="colorButton" ion-button icon-left (tap)="changeColorFromToolbar(color)">
     </button>
