@@ -144,6 +144,11 @@ export class HomePage {
 
         ctx.font = "30px Arial";
         ctx.fillText("Hello World",100,100);
+        var data = ctx.canvas.toDataURL();
+        console.log(data);
+
+
+
 
     } else if (toolStr == 'paint') {
         this.zText = 2;
@@ -179,17 +184,26 @@ export class HomePage {
 
   canvasTapped(event) {
     this.textPlaceholder = 'Hold to start entering text...';
-    // this.textPositionX = event.srcEvent.offsetX + 'px';
+    this.textPositionX = event.srcEvent.offsetX + 'px';
     this.textPositionY = event.srcEvent.offsetY + 'px';
     this.textReadOnly = true;
+
+    let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
+
+    ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
+
+        ctx.font = "30px Arial";
+        ctx.fillText("Hello World", event.srcEvent.offsetX, event.srcEvent.offsetY );
+        var data = ctx.canvas.toDataURL();
+        console.log(data);
     //Focus as soon as you click(?)
     //Draggable?
   }
 
   editTextPosition() {
     console.log("tapped");
-    // this.textPositionX = 0 + 'px';
-    // this.textPositionY = 0 + 'px';
+    this.textPositionX = 0 + 'px';
+    this.textPositionY = 0 + 'px';
   }
 
   editText() {
