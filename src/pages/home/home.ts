@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, Inject, ElementRef } from '@angular/core';
 import { NavController, Platform, Content } from 'ionic-angular';
 import { AngularFire, FirebaseObjectObservable, FirebaseApp } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
@@ -13,8 +13,11 @@ import { Camera, Keyboard, Screenshot, Toast } from 'ionic-native';
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
   @ViewChild(Content) canvas: Content;
+  @ViewChild('canvastext') canvasRef: ElementRef;
+
 
   canvasHeight: string;
+  canvasWidth = this.plt.width();
   colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
   paintButtonColor = '';
   lastPaintColor = '';
@@ -97,6 +100,7 @@ export class HomePage {
     console.log(this.canvas.contentHeight);
     this.canvasHeight = this.canvas.contentHeight + 'px';
     this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
+    this.canvasRef.nativeElement.setAttribute('height',this.canvas.contentHeight);
     this.toolbarShow = true;
   }
 
@@ -111,7 +115,7 @@ export class HomePage {
 
   drawComplete() {
     // will be notified of szimek/signature_pad's onEnd event
-    console.log(this.signaturePad.toDataURL());
+    //console.log(this.signaturePad.toDataURL());
   }
 
   drawStart() {
@@ -134,6 +138,13 @@ export class HomePage {
         this.paintButtonColor = '';
         this.textPlaceholder = 'Hold to start entering text...';
         this.textReadOnly = false;
+
+
+        let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
+
+        ctx.font = "30px Arial";
+        ctx.fillText("Hello World",100,100);
+
     } else if (toolStr == 'paint') {
         this.zText = 2;
         this.zPaint = 3;

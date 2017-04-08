@@ -2,8 +2,8 @@
   <div id="canvas" [style.height]="canvasHeight">
     <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
     <signature-pad [style.zIndex]="zPaint" [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
-    <div id="canvas-text" [style.zIndex]="zText" (tap)="canvasTapped($event)">
-    </div>
+    <canvas #canvastext id="canvas-text" [width]="canvasWidth" height="100" [style.zIndex]="zText" (tap)="canvasTapped($event)">
+    </canvas>
   </div>
   <textarea *ngIf="textPlaceholder || textValue" autosize [readonly]="textReadOnly ? textReadOnly : null" (tap)="editTextPosition()" (press)="editText()" [style.top]="textPositionY" [style.left]="textPositionX" [style.color]="textColor" [(ngModel)]="textValue" id="caption" placeholder="{{ textPlaceholder }}" ></textarea>
   <ion-fab right bottom *ngIf="!toolbarShow && !publishing">
