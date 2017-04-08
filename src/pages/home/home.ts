@@ -34,7 +34,7 @@ export class HomePage {
   textPositionY: string = '25%';
   lastTextPositionX: string;
   lastTextPositionY: string;
-  reservationTime = 5; //Minutes
+  reservationTime = 3; //Minutes
 
   rock: FirebaseObjectObservable<any[]>;
   storageRef;
@@ -68,11 +68,11 @@ export class HomePage {
         title = 'You are viewing the current Rock'
         subTitle = 'This rock was just painted.'
         buttons = ['Nice!']
-        // this.published = true;
+        this.published = true;
       }
       else if (timeDiff < this.reservationTime) {
         // Hide toolbar, etc
-        // this.published = true;
+        this.published = true;
         subTitle = 'This rock was painted ' + Math.floor(timeDiff) + ' minutes ago.'
         buttons = ['Ok!']
       } else {
