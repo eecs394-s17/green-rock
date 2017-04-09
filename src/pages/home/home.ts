@@ -37,6 +37,7 @@ export class HomePage {
   textPositionY: string = '25%';
   lastTextPositionX: string;
   lastTextPositionY: string;
+  canvasTextValue: string;
 
   rock: FirebaseObjectObservable<any[]>;
   storageRef;
@@ -139,17 +140,6 @@ export class HomePage {
         this.textPlaceholder = 'Hold to start entering text...';
         this.textReadOnly = false;
 
-
-        let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
-
-        ctx.font = "30px Arial";
-        ctx.fillText("Hello World",100,100);
-        var data = ctx.canvas.toDataURL();
-        console.log(data);
-
-
-
-
     } else if (toolStr == 'paint') {
         this.zText = 2;
         this.zPaint = 3;
@@ -193,9 +183,11 @@ export class HomePage {
     ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
 
         ctx.font = "30px Arial";
-        ctx.fillText("Hello World", event.srcEvent.offsetX, event.srcEvent.offsetY );
+        ctx.fillText(this.canvasTextValue, event.srcEvent.offsetX, event.srcEvent.offsetY );
         var data = ctx.canvas.toDataURL();
         console.log(data);
+
+        console.log(this.canvasTextValue);
     //Focus as soon as you click(?)
     //Draggable?
   }

@@ -39,7 +39,7 @@ signature-pad {
 	position: absolute;
 	top: 0;
 	left: 0;
-	background-color: green;
+	background-color: transparent;
 }
 
 #caption {
@@ -58,4 +58,8 @@ signature-pad {
 
 .text-input {
 	margin: 0;
+}
+
+#canvas-textInput {
+	display: inline-block;
 }
