@@ -25,7 +25,7 @@ export class HomePage {
   lastTextColor = '';
   textColor = '';
   textPlaceholder: string = '';
-  textValue: string = "";
+  textValue: string = '';
   textReadOnly: boolean = true;
   toolbarShow: boolean = false;
   textStyleShow: boolean = false;
@@ -33,11 +33,11 @@ export class HomePage {
   publishing: boolean = false;
   zText: number = 3;
   zPaint: number = 2;
-  textPositionX: string;
-  textPositionY: string = '25%';
+  textPositionX: number = this.plt.width()/2;
+  textPositionY: number = 50;
   lastTextPositionX: string;
   lastTextPositionY: string;
-  canvasTextValue: string;
+  canvasTextValue: string = '';
 
   rock: FirebaseObjectObservable<any[]>;
   storageRef;
@@ -66,7 +66,7 @@ export class HomePage {
         console.log(error);
       });
     });
-
+/*
     Keyboard.onKeyboardShow().subscribe(data => { 
       this.lastTextPositionY = this.textPositionY;
       this.lastTextPositionX = this.textPositionX;
@@ -78,7 +78,7 @@ export class HomePage {
     Keyboard.onKeyboardHide().subscribe(data => {
       this.textPositionX = this.lastTextPositionX;
       this.textPositionY = this.lastTextPositionY;
-    });
+    });*/
   }
 
   openGallery (): void {
@@ -170,32 +170,33 @@ export class HomePage {
     this.textColor = color;
     this.lastTextColor = color;
     this.textButtonColor = color;
+    this.updateText();
   }
 
   canvasTapped(event) {
     this.textPlaceholder = 'Hold to start entering text...';
-    this.textPositionX = event.srcEvent.offsetX + 'px';
-    this.textPositionY = event.srcEvent.offsetY + 'px';
+    this.textPositionX = event.srcEvent.offsetX;
+    this.textPositionY = event.srcEvent.offsetY;
     this.textReadOnly = true;
+    this.updateText();
 
+    
+        //var data = ctx.canvas.toDataURL();
+        //console.log(data);
+
+        //console.log(this.canvasTextValue);
+    //Focus as soon as you click(?)
+    //Draggable?
+  }
+
+  updateText() {
     let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
 
     ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
 
         ctx.font = "30px Arial";
-        ctx.fillText(this.canvasTextValue, event.srcEvent.offsetX, event.srcEvent.offsetY );
-        var data = ctx.canvas.toDataURL();
-        console.log(data);
-
-        console.log(this.canvasTextValue);
-    //Focus as soon as you click(?)
-    //Draggable?
-  }
-
-  editTextPosition() {
-    console.log("tapped");
-    this.textPositionX = 0 + 'px';
-    this.textPositionY = 0 + 'px';
+        ctx.fillStyle = this.textColor;
+        ctx.fillText(this.canvasTextValue, this.textPositionX, this.textPositionY);
   }
 
   editText() {
