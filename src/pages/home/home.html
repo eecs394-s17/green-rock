@@ -1,4 +1,7 @@
 <ion-content id="back">
+  <ion-fab top right>
+    <button ion-fab *ngIf="showRefresh" (tap)="refreshApp()" mini><ion-icon name="refresh"></ion-icon></button>
+  </ion-fab>
   <div id="canvas" [style.height]="canvasHeight">
     <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
     <signature-pad [style.zIndex]="zPaint" [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>

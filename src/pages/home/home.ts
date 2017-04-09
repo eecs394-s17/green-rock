@@ -1,5 +1,5 @@
 import { Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
-import { NavController, Platform, Content, AlertController } from 'ionic-angular';
+import { NavController, Platform, Content, AlertController, LoadingController} from 'ionic-angular';
 import { AngularFire, FirebaseObjectObservable, FirebaseApp } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
@@ -34,7 +34,9 @@ export class HomePage {
   textPositionY: string = '25%';
   lastTextPositionX: string;
   lastTextPositionY: string;
-  reservationTime = 3; //Minutes
+  reservationTime = 3; // Minutes
+  showRefresh: boolean = true;
+
 
   rock: FirebaseObjectObservable<any[]>;
   storageRef;
@@ -46,7 +48,7 @@ export class HomePage {
 
   private imageSrc: string = '';
 
-  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire, public alertCtrl: AlertController) {
+  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire, public alertCtrl: AlertController, public loadingCtrl: LoadingController) {
     this.rock = af.database.object('/rock1', { preserveSnapshot: true});
 
     this.rock.subscribe(snapshot => {
@@ -55,29 +57,34 @@ export class HomePage {
       console.log(snap.val());
       var t = this;
       this.storageRef = firebaseApp.storage().ref().child(snap.val().image);
+      
+      // grab the time when the current rock was published
       var publishTime = snap.val().timestamp;
+      // get current time
       var currentTime = (new Date().getTime());
-
+      // convert milliseconds to minutes
       var timeDiff = ((currentTime - publishTime)/1000)/60
       console.log(Math.floor(timeDiff));
 
-      var title = 'You are viewing the current Rock';
+      var title = 'Rock Status:';
       var subTitle;
       var buttons;
+
       if (Math.floor(timeDiff) <= 1) {
-        title = 'You are viewing the current Rock'
         subTitle = 'This rock was just painted.'
-        buttons = ['Nice!']
+        buttons = ['Ok']
+        // Hide toolbar, etc
         this.published = true;
       }
       else if (timeDiff < this.reservationTime) {
         // Hide toolbar, etc
         this.published = true;
+
         subTitle = 'This rock was painted ' + Math.floor(timeDiff) + ' minutes ago.'
-        buttons = ['Ok!']
+        buttons = ['Ok']
       } else {
-        subTitle = 'This rock can be painted over now!'
-        buttons = ['Ok!']
+        subTitle = 'This rock can be painted!'
+        buttons = ['Ok']
       }
 
       let alert = this.alertCtrl.create({
@@ -218,8 +225,13 @@ export class HomePage {
     this.textReadOnly = false;
   }
 
+  refreshApp() {
+    location.reload();
+  }
+
   publishRock() {
     this.published = true;
+    this.showRefresh = false;
     if (this.textValue) {
       this.textPlaceholder = '';
     }
@@ -242,6 +254,8 @@ export class HomePage {
         console.log(time);
         t.rock.set({ latitude: 1, longitude: 1, image: 'rock1.png', timestamp: time });
         t.published = false;
+
+        location.reload();
       });
       
     })
