@@ -126,8 +126,11 @@ export class HomePage {
 
   clearRock() {
     this.signaturePad.clear();
-    this.textValue = "";
+    this.textValue = '';
     this.imageSrc = '';
+    let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
+    ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
+    this.canvasTextValue = '';
   }
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
@@ -137,7 +140,7 @@ export class HomePage {
         this.textButtonColor = this.lastTextColor;
         this.paintStyleShow = false;
         this.paintButtonColor = '';
-        this.textPlaceholder = 'Hold to start entering text...';
+        this.textPlaceholder = 'Enter text...';
         this.textReadOnly = false;
 
     } else if (toolStr == 'paint') {
@@ -174,7 +177,7 @@ export class HomePage {
   }
 
   canvasTapped(event) {
-    this.textPlaceholder = 'Hold to start entering text...';
+    this.textPlaceholder = 'Enter text...';
     this.textPositionX = event.srcEvent.offsetX;
     this.textPositionY = event.srcEvent.offsetY;
     this.textReadOnly = true;
@@ -197,6 +200,14 @@ export class HomePage {
         ctx.font = "30px Arial";
         ctx.fillStyle = this.textColor;
         ctx.fillText(this.canvasTextValue, this.textPositionX, this.textPositionY);
+
+        var dataText = ctx.canvas.toDataURL();
+        console.log("Text",dataText);
+        //window.open(dataText);
+
+        var dataDraw = this.signaturePad.toDataURL();
+        console.log("SignaturePad",dataDraw);
+        //window.open(dataDraw);
   }
 
   editText() {
