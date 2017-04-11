@@ -1,5 +1,6 @@
-import { Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, Inject, ElementRef } from '@angular/core';
 import { NavController, Platform, Content, AlertController, LoadingController} from 'ionic-angular';
+
 import { AngularFire, FirebaseObjectObservable, FirebaseApp } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
@@ -13,8 +14,11 @@ import { Camera, Keyboard, Screenshot, Toast } from 'ionic-native';
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
   @ViewChild(Content) canvas: Content;
+  @ViewChild('canvastext') canvasRef: ElementRef;
+
 
   canvasHeight: string;
+  canvasWidth = this.plt.width();
   colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
   paintButtonColor = '';
   lastPaintColor = '';
@@ -22,7 +26,7 @@ export class HomePage {
   lastTextColor = '';
   textColor = '';
   textPlaceholder: string = '';
-  textValue: string = "";
+  textValue: string = '';
   textReadOnly: boolean = true;
   toolbarShow: boolean = false;
   textStyleShow: boolean = false;
@@ -30,13 +34,14 @@ export class HomePage {
   published: boolean = false;
   zText: number = 3;
   zPaint: number = 2;
-  textPositionX: string;
-  textPositionY: string = '25%';
+  textPositionX: number = this.plt.width()/2;
+  textPositionY: number = 50;
   lastTextPositionX: string;
   lastTextPositionY: string;
   reservationTime = 3; // Minutes
   showRefresh: boolean = true;
 
+  canvasTextValue: string = '';
 
   rock: FirebaseObjectObservable<any[]>;
   storageRef;
@@ -102,7 +107,7 @@ export class HomePage {
         console.log(error);
       });
     });
-
+/*
     Keyboard.onKeyboardShow().subscribe(data => { 
       this.lastTextPositionY = this.textPositionY;
       this.lastTextPositionX = this.textPositionX;
@@ -114,7 +119,7 @@ export class HomePage {
     Keyboard.onKeyboardHide().subscribe(data => {
       this.textPositionX = this.lastTextPositionX;
       this.textPositionY = this.lastTextPositionY;
-    });
+    });*/
   }
 
   openGallery (): void {
@@ -137,6 +142,9 @@ export class HomePage {
     console.log(this.canvas.contentHeight);
     this.canvasHeight = this.canvas.contentHeight + 'px';
     this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
+
+    this.canvasRef.nativeElement.setAttribute('height',this.canvas.contentHeight);
+    this.toolbarShow = true;
   }
 
   ngAfterViewInit() {
@@ -150,7 +158,7 @@ export class HomePage {
 
   drawComplete() {
     // will be notified of szimek/signature_pad's onEnd event
-    console.log(this.signaturePad.toDataURL());
+    //console.log(this.signaturePad.toDataURL());
   }
 
   drawStart() {
@@ -160,8 +168,11 @@ export class HomePage {
 
   clearRock() {
     this.signaturePad.clear();
-    this.textValue = "";
+    this.textValue = '';
     this.imageSrc = '';
+    let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
+    ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
+    this.canvasTextValue = '';
   }
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
@@ -171,8 +182,9 @@ export class HomePage {
         this.textButtonColor = this.lastTextColor;
         this.paintStyleShow = false;
         this.paintButtonColor = '';
-        this.textPlaceholder = 'Hold to start entering text...';
+        this.textPlaceholder = 'Enter text...';
         this.textReadOnly = false;
+
     } else if (toolStr == 'paint') {
         this.zText = 2;
         this.zPaint = 3;
@@ -203,21 +215,41 @@ export class HomePage {
     this.textColor = color;
     this.lastTextColor = color;
     this.textButtonColor = color;
+    this.updateText();
   }
 
   canvasTapped(event) {
-    this.textPlaceholder = 'Hold to start entering text...';
-    // this.textPositionX = event.srcEvent.offsetX + 'px';
-    this.textPositionY = event.srcEvent.offsetY + 'px';
+    this.textPlaceholder = 'Enter text...';
+    this.textPositionX = event.srcEvent.offsetX;
+    this.textPositionY = event.srcEvent.offsetY;
     this.textReadOnly = true;
+    this.updateText();
+
+    
+        //var data = ctx.canvas.toDataURL();
+        //console.log(data);
+
+        //console.log(this.canvasTextValue);
     //Focus as soon as you click(?)
     //Draggable?
   }
 
-  editTextPosition() {
-    console.log("tapped");
-    // this.textPositionX = 0 + 'px';
-    // this.textPositionY = 0 + 'px';
+  updateText() {
+    let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
+
+    ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
+
+        ctx.font = "30px Arial";
+        ctx.fillStyle = this.textColor;
+        ctx.fillText(this.canvasTextValue, this.textPositionX, this.textPositionY);
+
+        var dataText = ctx.canvas.toDataURL();
+        console.log("Text",dataText);
+        //window.open(dataText);
+
+        var dataDraw = this.signaturePad.toDataURL();
+        console.log("SignaturePad",dataDraw);
+        //window.open(dataDraw);
   }
 
   editText() {
