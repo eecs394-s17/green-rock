@@ -39,6 +39,8 @@ This make sure you have the lastest versions of all the packages in the branch
 If you run into issues deploying, try the following:
 1. Run `npm install`.
 2. Make sure the Ionic Native Camera plugin is installed by running `ionic plugin add cordova-plugin-camera`.
+3. Do the same for the Ionic Native Screenshot plugin: `ionic plugin add https://github.com/gitawego/cordova-screenshot.git`
+4. Ionic Native Toast plugin should also be installed: `ionic plugin add cordova-plugin-x-toast`
 
 ## Git Basics for this Repo ##
 Click here for a [quick overview of Git](https://git-scm.com/book/en/v2/Getting-Started-Git-Basics).
