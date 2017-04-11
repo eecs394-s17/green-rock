@@ -144,7 +144,7 @@ export class HomePage {
     this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
 
     this.canvasRef.nativeElement.setAttribute('height',this.canvas.contentHeight);
-    this.toolbarShow = true;
+    this.toolbarShow = false;
   }
 
   ngAfterViewInit() {
