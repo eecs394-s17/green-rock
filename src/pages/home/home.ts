@@ -1,5 +1,5 @@
 import { Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
-import { NavController, Platform, Content } from 'ionic-angular';
+import { NavController, Platform, Content, AlertController, LoadingController} from 'ionic-angular';
 import { AngularFire, FirebaseObjectObservable, FirebaseApp } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
@@ -27,13 +27,16 @@ export class HomePage {
   toolbarShow: boolean = false;
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
-  publishing: boolean = false;
+  published: boolean = false;
   zText: number = 3;
   zPaint: number = 2;
   textPositionX: string;
   textPositionY: string = '25%';
   lastTextPositionX: string;
   lastTextPositionY: string;
+  reservationTime = 3; // Minutes
+  showRefresh: boolean = true;
+
 
   rock: FirebaseObjectObservable<any[]>;
   storageRef;
@@ -45,7 +48,7 @@ export class HomePage {
 
   private imageSrc: string = '';
 
-  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire ) {
+  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire, public alertCtrl: AlertController, public loadingCtrl: LoadingController) {
     this.rock = af.database.object('/rock1', { preserveSnapshot: true});
 
     this.rock.subscribe(snapshot => {
@@ -54,6 +57,43 @@ export class HomePage {
       console.log(snap.val());
       var t = this;
       this.storageRef = firebaseApp.storage().ref().child(snap.val().image);
+      
+      // grab the time when the current rock was published
+      var publishTime = snap.val().timestamp;
+      // get current time
+      var currentTime = (new Date().getTime());
+      // convert milliseconds to minutes
+      var timeDiff = ((currentTime - publishTime)/1000)/60
+      console.log(Math.floor(timeDiff));
+
+      var title = 'Rock Status:';
+      var subTitle;
+      var buttons;
+
+      if (Math.floor(timeDiff) <= 1) {
+        subTitle = 'This rock was just painted.'
+        buttons = ['Ok']
+        // Hide toolbar, etc
+        this.published = true;
+      }
+      else if (timeDiff < this.reservationTime) {
+        // Hide toolbar, etc
+        this.published = true;
+
+        subTitle = 'This rock was painted ' + Math.floor(timeDiff) + ' minutes ago.'
+        buttons = ['Ok']
+      } else {
+        subTitle = 'This rock can be painted!'
+        buttons = ['Ok']
+      }
+
+      let alert = this.alertCtrl.create({
+        title: title,
+        subTitle: subTitle,
+        buttons: buttons
+      })
+      alert.present();
+
       this.storageRef.getDownloadURL().then(function(url) {
         console.log(url);
         t.imageSrc = url;
@@ -97,7 +137,6 @@ export class HomePage {
     console.log(this.canvas.contentHeight);
     this.canvasHeight = this.canvas.contentHeight + 'px';
     this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
-    this.toolbarShow = true;
   }
 
   ngAfterViewInit() {
@@ -186,8 +225,13 @@ export class HomePage {
     this.textReadOnly = false;
   }
 
+  refreshApp() {
+    location.reload();
+  }
+
   publishRock() {
-    this.publishing = true;
+    this.published = true;
+    this.showRefresh = false;
     if (this.textValue) {
       this.textPlaceholder = '';
     }
@@ -205,14 +249,17 @@ export class HomePage {
             console.log(toast);
           });
         console.log('Uploaded a data_url string!');
-        t.publishing = false;
+        //Update database with image path and timestamp
+        var time = (new Date().getTime());
+        console.log(time);
+        t.rock.set({ latitude: 1, longitude: 1, image: 'rock1.png', timestamp: time });
+        t.published = false;
+
+        location.reload();
       });
-      //Update database with image path and timestamp
-      var time = (new Date().getTime());
-      console.log(time);
-      t.rock.set({ latitude: 1, longitude: 1, image: 'rock1.png', timestamp: time });
+      
     })
-    .catch(err => { console.error(err) });
+    .catch(err => { console.error(err); });
     }, 100);
   }
 }
