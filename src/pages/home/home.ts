@@ -104,33 +104,14 @@ export class HomePage {
         console.log("Hide Timer");
       }
 
-      var title = 'Rock Status:';
-      var subTitle;
-      var buttons;
-
       if (Math.floor(timeDiff) <= 1) {
-        subTitle = 'This rock was just painted.'
-        buttons = ['Ok']
         // Hide toolbar, etc
         this.published = true;
       }
       else if (timeDiff < this.reservationTime) {
         // Hide toolbar, etc
         this.published = true;
-
-        subTitle = 'This rock was painted ' + Math.floor(timeDiff) + ' minutes ago.'
-        buttons = ['Ok']
-      } else {
-        subTitle = 'This rock can be painted!'
-        buttons = ['Ok']
       }
-
-      let alert = this.alertCtrl.create({
-        title: title,
-        subTitle: subTitle,
-        buttons: buttons
-      })
-      alert.present();
 
       this.storageRef.getDownloadURL().then(function(url) {
         console.log(url);
