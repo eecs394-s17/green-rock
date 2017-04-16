@@ -1,3 +1,9 @@
+<ion-header>
+  <ion-navbar *ngIf="showTime" color="dark">
+    <p style="color: white;text-align: center;" id="demo">{{timerStatus}}</p>
+  </ion-navbar>
+</ion-header>
+
 <ion-content id="back">
   <ion-fab top right>
     <button ion-fab *ngIf="showRefresh" (tap)="refreshApp()" mini><ion-icon name="refresh"></ion-icon></button>
@@ -24,7 +30,7 @@
       <button ion-button (tap)="updateText()">Submit</button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar>
+  <ion-toolbar color="dark">
     <ion-buttons>
       <button id="textButton" color="{{ textButtonColor }}" ion-button icon-left icon-only (tap)="toggleStyleBar('text')">
         <ion-icon name="md-text"></ion-icon>
