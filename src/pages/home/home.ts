@@ -39,7 +39,6 @@ export class HomePage {
   lastTextPositionX: string;
   lastTextPositionY: string;
   reservationTime = 2; // Minutes
-  showRefresh: boolean = true;
   showTime: boolean = true;
   timerStr: string = '';
 
@@ -291,13 +290,8 @@ export class HomePage {
     this.textReadOnly = false;
   }
 
-  refreshApp() {
-    location.reload();
-  }
-
   publishRock() {
     this.published = true;
-    this.showRefresh = false;
     if (this.textValue) {
       this.textPlaceholder = '';
     }
