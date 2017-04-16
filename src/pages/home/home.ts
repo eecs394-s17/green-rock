@@ -81,8 +81,8 @@ export class HomePage {
       var distance = countDownDate - now;
 
       if (distance > 0) {
+        this.showTime = true;
         // Update the count down every 1 second
-        this.chRef.reattach();
         var x = setInterval(function() {
           // Time calculations for days, hours, minutes and seconds
           var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -91,7 +91,6 @@ export class HomePage {
           var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
           t.timerStr = days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
-          t.chRef.detectChanges();
           distance = countDownDate - new Date().getTime();
 
           // If the count down is finished, write some text 
