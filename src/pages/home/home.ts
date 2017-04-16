@@ -6,7 +6,6 @@ import { Autosize } from 'angular2-autosize';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
 import { Camera, Keyboard, Screenshot, Toast } from 'ionic-native';
-var ptime = 0;
 
 @Component({
   selector: 'page-home',
@@ -42,7 +41,7 @@ export class HomePage {
   reservationTime = 2; // Minutes
   showRefresh: boolean = true;
   showTime: boolean = true;
-  timerStatus: string = '';
+  timerStr: string = '';
 
   canvasTextValue: string = '';
 
@@ -81,28 +80,23 @@ export class HomePage {
       // Find the distance between now an the count down date
       var distance = countDownDate - now;
 
-      if(distance > 0) {
-
+      if (distance > 0) {
         // Update the count down every 1 second
+        this.chRef.reattach();
         var x = setInterval(function() {
-
           // Time calculations for days, hours, minutes and seconds
           var days = Math.floor(distance / (1000 * 60 * 60 * 24));
           var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
           var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-          // Display the result in the element with id="demo"
-          //this.timerStatus = days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
-          //console.log(this.timerStatus);
-          var timerStr = days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
-          //document.getElementById("demo").innerHTML = timerStr;
-          //distance = countDownDate - new Date().getTime();
+          t.timerStr = days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
+          t.chRef.detectChanges();
+          distance = countDownDate - new Date().getTime();
 
           // If the count down is finished, write some text 
           if (distance < 0) {
             clearInterval(x);
-            //document.getElementById("demo").innerHTML = "EXPIRED";
             location.reload();
           }
         }, 1000);
@@ -111,9 +105,6 @@ export class HomePage {
         this.canvas.resize();
         console.log("Hide Timer");
       }
-
-      
-
 
       var title = 'Rock Status:';
       var subTitle;
@@ -183,7 +174,7 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
-    console.log(this.canvas.contentHeight);
+    console.log("Content height: " + this.canvas.contentHeight);
     this.canvasHeight = this.canvas.contentHeight + 'px';
     this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
 
