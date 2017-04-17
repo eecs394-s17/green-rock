@@ -40,7 +40,7 @@ export class HomePage {
   lastTextPositionY: string;
   reservationTime = 2; // Minutes
   showRefresh: boolean = true;
-  showTime: boolean = true;
+  showTime: boolean = false;
   timerStr: string = '';
 
   canvasTextValue: string = '';
@@ -83,6 +83,7 @@ export class HomePage {
       if (distance > 0) {
         this.showTime = true;
         // Update the count down every 1 second
+
         var x = setInterval(function() {
           // Time calculations for days, hours, minutes and seconds
           var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -100,9 +101,9 @@ export class HomePage {
           }
         }, 1000);
       } else {
+        console.log("Hiding timer...");
         this.showTime = false;
         this.canvas.resize();
-        console.log("Hide Timer");
       }
 
       var title = 'Rock Status:';
