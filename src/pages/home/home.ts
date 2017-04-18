@@ -16,44 +16,55 @@ export class HomePage {
   @ViewChild(Content) canvas: Content;
   @ViewChild('canvastext') canvasRef: ElementRef;
 
-
+  // Canvas vars
   canvasHeight: string;
   canvasWidth = this.plt.width();
-  colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
-  paintButtonColor = '';
-  lastPaintColor = '';
-  textButtonColor = '';
-  lastTextColor = '';
-  textColor = '';
-  textPlaceholder: string = '';
-  textValue: string = '';
-  textReadOnly: boolean = true;
-  toolbarShow: boolean = false;
-  textStyleShow: boolean = false;
-  paintStyleShow: boolean = false;
-  published: boolean = false;
   zText: number = 3;
   zPaint: number = 2;
-  textPositionX: number = this.plt.width()/2;
-  textPositionY: number = 50;
-  lastTextPositionX: string;
-  lastTextPositionY: string;
-  reservationTime = 2; // Minutes
+  colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
   showRefresh: boolean = true;
-  showTime: boolean = false;
-  timerStr: string = '';
+  published: boolean = false;
 
-  canvasTextValue: string = '';
+  // Background image
+  private imageSrc: string = '';
 
-  rock: FirebaseObjectObservable<any[]>;
-  storageRef;
+  // Signature pad
+  paintButtonColor = '';
+  lastPaintColor = '';
 
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
     'canvasWidth': this.plt.width(),
   };
 
-  private imageSrc: string = '';
+  // Text tool
+  textButtonColor = '';
+  lastTextColor = '';
+  textColor = '';
+  textPlaceholder: string = '';
+  textValue: string = '';
+  textReadOnly: boolean = true;
+  textPositionX: number = this.plt.width()/2;
+  textPositionY: number = 50;
+  lastTextPositionX: string;
+  lastTextPositionY: string;
+  canvasTextValue: string = '';
+
+  // Toolbar
+  toolbarShow: boolean = false;
+  textStyleShow: boolean = false;
+  paintStyleShow: boolean = false;
+  showTime: boolean = false;
+  
+  // Firebase related
+  reservationTime = 2; // Minutes
+  rock: FirebaseObjectObservable<any[]>;
+  storageRef;
+  
+  // Live Timer
+  timerStr: string = '';
+
+  
 
   constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire, public alertCtrl: AlertController, public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
     this.rock = af.database.object('/rock1', { preserveSnapshot: true});
@@ -62,7 +73,6 @@ export class HomePage {
       //Need the line below to get rid of TypeScript compiler complaining about an error.
       var snap: any = snapshot;
       console.log(snap.val());
-      var t = this;
       this.storageRef = firebaseApp.storage().ref().child(snap.val().image);
       
       // grab the time when the current rock was published
@@ -115,7 +125,9 @@ export class HomePage {
         this.published = true;
       }
 
+      var t = this;
       this.storageRef.getDownloadURL().then(function(url) {
+        // show what was last painted on the rock
         console.log(url);
         t.imageSrc = url;
         t.chRef.detectChanges();
@@ -138,6 +150,7 @@ export class HomePage {
     });*/
   }
 
+  // Pick background image
   openGallery (): void {
     let cameraOptions = {
       sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
@@ -149,11 +162,13 @@ export class HomePage {
       correctOrientation: true
     }
 
+    // retrieve image
     Camera.getPicture(cameraOptions)
     .then(file_uri => this.imageSrc = file_uri, 
       err => console.log(err));
   }
 
+  // adjust canvas height after view is rendered
   ionViewDidEnter() {
     console.log("Content height: " + this.canvas.contentHeight);
     this.canvasHeight = this.canvas.contentHeight + 'px';
@@ -163,6 +178,7 @@ export class HomePage {
     this.toolbarShow = false;
   }
 
+  /* SIGNATURE PAD FUNCTIONS START */
   ngAfterViewInit() {
     // this.signaturePad is now available
     // can set szimek/signature_pad options at runtime here
@@ -181,7 +197,9 @@ export class HomePage {
     // will be notified of szimek/signature_pad's onBegin event
     console.log('begin drawing');
   }
+  /* SIGNATURE PAD FUNCTIONS END */
 
+  // Reset canvas and signature pad
   clearRock() {
     this.signaturePad.clear();
     this.textValue = '';
@@ -190,6 +208,8 @@ export class HomePage {
     ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
     this.canvasTextValue = '';
   }
+
+  // Handles tool selection
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
       this.zText = 3;
@@ -213,6 +233,7 @@ export class HomePage {
     }
   }
 
+  // Change colors
   changeColorFromToolbar(color) {
     if (this.textStyleShow) {
       this.changeTextColor(color);
@@ -234,6 +255,8 @@ export class HomePage {
     this.updateText();
   }
 
+  /* TEXT TOOL FUNCTIONS START */
+  // for positioning text
   canvasTapped(event) {
     this.textPlaceholder = 'Enter text...';
     this.textPositionX = event.srcEvent.offsetX;
@@ -272,7 +295,9 @@ export class HomePage {
     console.log("Allowing text to be editable...");
     this.textReadOnly = false;
   }
+  /* TEXT TOOL FUNCTIONS END */
 
+  // Firebase stuff
   publishRock() {
     this.published = true;
     if (this.textValue) {
@@ -300,7 +325,6 @@ export class HomePage {
 
           location.reload();
         });
-
       })
       .catch(err => { console.error(err); });
     }, 100);
