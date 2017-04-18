@@ -116,13 +116,18 @@ export class HomePage {
         this.canvas.resize();
       }
 
-      if (Math.floor(timeDiff) <= 1) {
+      if (timeDiff < this.reservationTime) {
         // Hide toolbar, etc
         this.published = true;
-      }
-      else if (timeDiff < this.reservationTime) {
-        // Hide toolbar, etc
-        this.published = true;
+      } else {
+        const toast = this.toastCtrl.create({
+          message: 'The Rock Can Be Painted!',
+          showCloseButton: true,
+          closeButtonText: 'Ok',
+          position: 'top',
+          duration: 10000,
+        });
+        toast.present();
       }
 
       var t = this;
