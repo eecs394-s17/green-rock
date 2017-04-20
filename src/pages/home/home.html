@@ -22,9 +22,9 @@
   <ion-toolbar color="dark" *ngIf="(textStyleShow || paintStyleShow) && toolbarShow">
     <button *ngFor="let color of colors" color="{{color}}" class="colorButton" ion-button icon-left (tap)="changeColorFromToolbar(color)">
     </button>
-    <label class="item item-input" id="canvas-textInput" *ngIf="textStyleShow && toolbarShow">
-      <ion-input type="text" [value]="canvasTextValue" [(ngModel)]="canvasTextValue" placeholder="{{ textPlaceholder }}"></ion-input>
-    </label>
+    <div class="textInput">
+      <ion-input id="canvas-textInput" type="text" [value]="canvasTextValue" [(ngModel)]="canvasTextValue" placeholder="{{ textPlaceholder }}"></ion-input>
+    </div>
     <ion-buttons id="submitText" *ngIf="textStyleShow && toolbarShow">
       <button ion-button (tap)="updateText()">Submit</button>
     </ion-buttons>
