@@ -1,7 +1,10 @@
+<ion-header *ngIf="showTime">
+  <ion-navbar color="dark">
+    <p style="color: white;text-align: center;">{{timerStr}}</p>
+  </ion-navbar>
+</ion-header>
+
 <ion-content id="back">
-  <ion-fab top right>
-    <button ion-fab *ngIf="showRefresh" (tap)="refreshApp()" mini><ion-icon name="refresh"></ion-icon></button>
-  </ion-fab>
   <div id="canvas" [style.height]="canvasHeight">
     <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
     <signature-pad [style.zIndex]="zPaint" [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
@@ -14,7 +17,7 @@
 </ion-content>
 
 <ion-footer *ngIf="toolbarShow && !published">
-  <ion-toolbar *ngIf="(textStyleShow || paintStyleShow) && toolbarShow">
+  <ion-toolbar color="dark" *ngIf="(textStyleShow || paintStyleShow) && toolbarShow">
     <button *ngFor="let color of colors" color="{{color}}" class="colorButton" ion-button icon-left (tap)="changeColorFromToolbar(color)">
     </button>
     <label class="item item-input" id="canvas-textInput" *ngIf="textStyleShow && toolbarShow">
@@ -24,7 +27,7 @@
       <button ion-button (tap)="updateText()">Submit</button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar>
+  <ion-toolbar color="dark">
     <ion-buttons>
       <button id="textButton" color="{{ textButtonColor }}" ion-button icon-left icon-only (tap)="toggleStyleBar('text')">
         <ion-icon name="md-text"></ion-icon>

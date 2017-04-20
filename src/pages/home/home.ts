@@ -1,5 +1,5 @@
 import { Component, ViewChild, ChangeDetectorRef, Inject, ElementRef } from '@angular/core';
-import { NavController, Platform, Content, AlertController, LoadingController} from 'ionic-angular';
+import { NavController, Platform, Content, AlertController, LoadingController, ToastController} from 'ionic-angular';
 
 import { AngularFire, FirebaseObjectObservable, FirebaseApp } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
@@ -54,13 +54,17 @@ export class HomePage {
   toolbarShow: boolean = false;
   textStyleShow: boolean = false;
   paintStyleShow: boolean = false;
-
+  showTime: boolean = false;
+  
   // Firebase related
-  reservationTime = 3; // Minutes
+  reservationTime = 2; // Minutes
   rock: FirebaseObjectObservable<any[]>;
   storageRef;
+  
+  // Live Timer
+  timerStr: string = '';
 
-  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire, public alertCtrl: AlertController, public loadingCtrl: LoadingController) {
+  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire, public alertCtrl: AlertController, public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
     this.rock = af.database.object('/rock1', { preserveSnapshot: true});
 
     this.rock.subscribe(snapshot => {
@@ -79,35 +83,52 @@ export class HomePage {
       var timeDiff = ((currentTime - publishTime)/1000)/60
       console.log(Math.floor(timeDiff));
 
-      var title = 'Rock Status:';
-      var subTitle;
-      var buttons;
+      // Set the date we're counting down to
+      var countDownDate = publishTime + (this.reservationTime*60*1000);
+      // Get todays date and time
+      var now = new Date().getTime();
+      // Find the distance between now an the count down date
+      var distance = countDownDate - now;
 
-      // Prepare the alert dialogue
-      if (Math.floor(timeDiff) <= 1) {
-        subTitle = 'This rock was just painted.'
-        buttons = ['Ok']
-        // Hide toolbar, etc
-        this.published = true;
-      }
-      else if (timeDiff < this.reservationTime) {
-        // Hide toolbar, etc
-        this.published = true;
+      if (distance > 0) {
+        this.showTime = true;
+        // Update the count down every 1 second
 
-        subTitle = 'This rock was painted ' + Math.floor(timeDiff) + ' minutes ago.'
-        buttons = ['Ok']
+        var x = setInterval(function() {
+          // Time calculations for days, hours, minutes and seconds
+          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          t.timerStr = days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
+          distance = countDownDate - new Date().getTime();
+
+          // If the count down is finished, write some text 
+          if (distance < 0) {
+            clearInterval(x);
+            location.reload();
+          }
+        }, 1000);
       } else {
-        subTitle = 'This rock can be painted!'
-        buttons = ['Ok']
+        console.log("Hiding timer...");
+        this.showTime = false;
+        this.canvas.resize();
       }
 
-      // Create and present the alert dialogue
-      let alert = this.alertCtrl.create({
-        title: title,
-        subTitle: subTitle,
-        buttons: buttons
-      })
-      alert.present();
+      if (timeDiff < this.reservationTime) {
+        // Hide toolbar, etc
+        this.published = true;
+      } else {
+        const toast = this.toastCtrl.create({
+          message: 'The Rock Can Be Painted!',
+          showCloseButton: true,
+          closeButtonText: 'Ok',
+          position: 'top',
+          duration: 10000,
+        });
+        toast.present();
+      }
 
       var t = this;
       this.storageRef.getDownloadURL().then(function(url) {
@@ -145,15 +166,16 @@ export class HomePage {
       encodingType: Camera.EncodingType.JPEG,      
       correctOrientation: true
     }
+
     // retrieve image
     Camera.getPicture(cameraOptions)
-      .then(file_uri => this.imageSrc = file_uri, 
+    .then(file_uri => this.imageSrc = file_uri, 
       err => console.log(err));
   }
 
   // adjust canvas height after view is rendered
   ionViewDidEnter() {
-    console.log(this.canvas.contentHeight);
+    console.log("Content height: " + this.canvas.contentHeight);
     this.canvasHeight = this.canvas.contentHeight + 'px';
     this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
 
@@ -195,24 +217,24 @@ export class HomePage {
   // Handles tool selection
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
-        this.zText = 3;
-        this.zPaint = 2;
-        this.textStyleShow = !this.textStyleShow;
-        this.textButtonColor = this.lastTextColor;
-        this.paintStyleShow = false;
-        this.paintButtonColor = '';
-        this.textPlaceholder = 'Enter text...';
-        this.textReadOnly = false;
+      this.zText = 3;
+      this.zPaint = 2;
+      this.textStyleShow = !this.textStyleShow;
+      this.textButtonColor = this.lastTextColor;
+      this.paintStyleShow = false;
+      this.paintButtonColor = '';
+      this.textPlaceholder = 'Enter text...';
+      this.textReadOnly = false;
 
     } else if (toolStr == 'paint') {
-        this.zText = 2;
-        this.zPaint = 3;
-        this.paintStyleShow = !this.paintStyleShow;
-        this.paintButtonColor = this.lastPaintColor;
-        this.textStyleShow = false;
-        this.textButtonColor = '';
-        this.textPlaceholder = '';
-        this.textReadOnly = true;
+      this.zText = 2;
+      this.zPaint = 3;
+      this.paintStyleShow = !this.paintStyleShow;
+      this.paintButtonColor = this.lastPaintColor;
+      this.textStyleShow = false;
+      this.textButtonColor = '';
+      this.textPlaceholder = '';
+      this.textReadOnly = true;
     }
   }
 
@@ -247,10 +269,10 @@ export class HomePage {
     this.textReadOnly = true;
     this.updateText();
     
-        //var data = ctx.canvas.toDataURL();
-        //console.log(data);
+    //var data = ctx.canvas.toDataURL();
+    //console.log(data);
 
-        //console.log(this.canvasTextValue);
+    //console.log(this.canvasTextValue);
     //Focus as soon as you click(?)
     //Draggable?
   }
@@ -260,17 +282,17 @@ export class HomePage {
 
     ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
 
-        ctx.font = "30px Arial";
-        ctx.fillStyle = this.textColor;
-        ctx.fillText(this.canvasTextValue, this.textPositionX, this.textPositionY);
+    ctx.font = "30px Arial";
+    ctx.fillStyle = this.textColor;
+    ctx.fillText(this.canvasTextValue, this.textPositionX, this.textPositionY);
 
-        var dataText = ctx.canvas.toDataURL();
-        console.log("Text",dataText);
-        //window.open(dataText);
+    var dataText = ctx.canvas.toDataURL();
+    console.log("Text",dataText);
+    //window.open(dataText);
 
-        var dataDraw = this.signaturePad.toDataURL();
-        console.log("SignaturePad",dataDraw);
-        //window.open(dataDraw);
+    var dataDraw = this.signaturePad.toDataURL();
+    console.log("SignaturePad",dataDraw);
+    //window.open(dataDraw);
   }
 
   editText() {
@@ -279,14 +301,9 @@ export class HomePage {
   }
   /* TEXT TOOL FUNCTIONS END */
 
-  refreshApp() {
-    location.reload();
-  }
-
   // Firebase stuff
   publishRock() {
     this.published = true;
-    this.showRefresh = false;
     if (this.textValue) {
       this.textPlaceholder = '';
     }
@@ -315,5 +332,5 @@ export class HomePage {
     })
     .catch(err => { console.error(err); });
     }, 100);
-  }
+  }  
 }
