@@ -27,33 +27,37 @@ page-home {
     z-index: 1;
 }
 
+#drawing-image {
+	position: absolute;
+    top: 0;
+    left: 0;
+    height: inherit;
+    width: 100%;
+    z-index: 2;
+}
+
+#text-image {
+	position: absolute;
+    top: 0;
+    left: 0;
+    height: inherit;
+    width: 100%;
+    z-index: 3;
+}
+
 signature-pad {
-	z-index: 2;
+	z-index: 4;
 	position: absolute;
 	top: 0;
 	left: 0;
 }
 
 #canvas-text {
-	z-index: 3;
+	z-index: 5;
 	position: absolute;
 	top: 0;
 	left: 0;
 	background-color: transparent;
-}
-
-#caption {
-	z-index: 3;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	box-sizing: border-box;
-	background: transparent;
-	border-color: transparent;
-	resize: none;
-	text-align: center;
-	// background-color:rgba(0,0,0,0.4);
 }
 
 .text-input {
