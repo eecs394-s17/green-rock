@@ -240,10 +240,13 @@ export class HomePage {
 
   /* TEXT TOOL FUNCTIONS START */
   // for positioning text
-  canvasTapped(event) {
+  canvasTapped(tapEvent) {
     this.textPlaceholder = 'Enter text...';
-    this.textPositionX = event.srcEvent.offsetX;
-    this.textPositionY = event.srcEvent.offsetY;
+    //this.textPositionX = event.srcEvent.offsetX;
+    //this.textPositionY = event.srcEvent.offsetY;
+    //console.log(tapEvent);
+    this.textPositionX = tapEvent.center.x;
+    this.textPositionY = tapEvent.center.y;
     this.textReadOnly = true;
     this.updateText();
     
@@ -265,11 +268,11 @@ export class HomePage {
         ctx.fillText(this.canvasTextValue, this.textPositionX, this.textPositionY);
 
         var dataText = ctx.canvas.toDataURL();
-        console.log("Text",dataText);
+        //console.log("Text",dataText);
         //window.open(dataText);
 
         var dataDraw = this.signaturePad.toDataURL();
-        console.log("SignaturePad",dataDraw);
+        //console.log("SignaturePad",dataDraw);
         //window.open(dataDraw);
   }
 
