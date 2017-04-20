@@ -7,6 +7,8 @@
 <ion-content id="back">
   <div id="canvas" [style.height]="canvasHeight">
     <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
+    <img id="drawing-image" *ngIf="imageDrawingSrc" [src]="imageDrawingSrc"/>
+    <img id="text-image" *ngIf="imageTextSrc" [src]="imageTextSrc"/>
     <signature-pad [style.zIndex]="zPaint" [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
     <canvas #canvastext id="canvas-text" [width]="canvasWidth" height="100" [style.zIndex]="zText" (tap)="canvasTapped($event)">
     </canvas>

@@ -27,6 +27,8 @@ export class HomePage {
 
   // Background image
   private imageSrc: string = '';
+  private imageDrawingSrc: string = '';
+  private imageTextSrc: string = '';
 
   // Signature pad
   paintButtonColor = '';
@@ -217,8 +219,8 @@ export class HomePage {
   // Handles tool selection
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
-      this.zText = 3;
-      this.zPaint = 2;
+      this.zText = 5;
+      this.zPaint = 4;
       this.textStyleShow = !this.textStyleShow;
       this.textButtonColor = this.lastTextColor;
       this.paintStyleShow = false;
@@ -227,8 +229,8 @@ export class HomePage {
       this.textReadOnly = false;
 
     } else if (toolStr == 'paint') {
-      this.zText = 2;
-      this.zPaint = 3;
+      this.zText = 4;
+      this.zPaint = 5;
       this.paintStyleShow = !this.paintStyleShow;
       this.paintButtonColor = this.lastPaintColor;
       this.textStyleShow = false;
@@ -312,6 +314,13 @@ export class HomePage {
     }
     this.chRef.detectChanges();
     
+    let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
+    var dataDraw = this.signaturePad.toDataURL();
+    var dataText = ctx.canvas.toDataURL();
+
+    this.imageDrawingSrc = dataDraw;
+    this.imageTextSrc = dataText;
+
     var t = this;
     //Timeout guarantees that toolbar and placeholder disappear before screenshot
     setTimeout(function() {
