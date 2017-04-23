@@ -16,6 +16,9 @@
   <ion-fab right bottom *ngIf="!toolbarShow && !published">
     <button ion-fab (tap)="toolbarShow = true"><ion-icon name="create"></ion-icon></button>
   </ion-fab>
+  <ion-fab right bottom *ngIf="published">
+    <button ion-fab (tap)="showComments()"><ion-icon name="text"></ion-icon></button>
+  </ion-fab>
 </ion-content>
 
 <ion-footer *ngIf="toolbarShow && !published">

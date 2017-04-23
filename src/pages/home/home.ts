@@ -7,9 +7,12 @@ import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
 import { Camera, Keyboard, Screenshot, Toast } from 'ionic-native';
 
+import { CommentsPage } from '../comments/comments';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
+  entryComponents: [ CommentsPage ]
 })
 export class HomePage {
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
@@ -344,5 +347,9 @@ export class HomePage {
     })
     .catch(err => { console.error(err); });
     }, 100);
-  }  
+  }
+
+  showComments() {
+    this.navCtrl.push(CommentsPage);
+  }
 }
