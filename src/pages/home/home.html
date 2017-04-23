@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content id="back">
+<ion-content>
   <div id="canvas" [style.height]="canvasHeight">
     <img id="canvas-image" *ngIf="imageSrc" [src]="imageSrc"/>
     <img id="drawing-image" *ngIf="imageDrawingSrc" [src]="imageDrawingSrc"/>
@@ -24,7 +24,7 @@
     </button>
     <div *ngIf="textStyleShow">
       <div class="textInput">
-        <ion-input id="canvas-textInput" type="text" [value]="canvasTextValue" [(ngModel)]="canvasTextValue" placeholder="{{ textPlaceholder }}"></ion-input>
+        <ion-input type="text" [value]="canvasTextValue" [(ngModel)]="canvasTextValue" placeholder="{{ textPlaceholder }}"></ion-input>
       </div>
       <ion-buttons id="submitText">
         <button ion-button (tap)="updateText()">Submit</button>
