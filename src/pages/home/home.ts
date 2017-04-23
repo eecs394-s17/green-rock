@@ -1,5 +1,5 @@
 import { Component, ViewChild, ChangeDetectorRef, Inject, ElementRef } from '@angular/core';
-import { NavController, Platform, Content, AlertController, LoadingController} from 'ionic-angular';
+import { NavController, Platform, Content, AlertController, LoadingController, ToastController} from 'ionic-angular';
 
 import { AngularFire, FirebaseObjectObservable, FirebaseApp } from 'angularfire2';
 import { Autosize } from 'angular2-autosize';
@@ -16,51 +16,65 @@ export class HomePage {
   @ViewChild(Content) canvas: Content;
   @ViewChild('canvastext') canvasRef: ElementRef;
 
-
+  // Canvas vars
   canvasHeight: string;
   canvasWidth = this.plt.width();
-  colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
-  paintButtonColor = '';
-  lastPaintColor = '';
-  textButtonColor = '';
-  lastTextColor = '';
-  textColor = '';
-  textPlaceholder: string = '';
-  textValue: string = '';
-  textReadOnly: boolean = true;
-  toolbarShow: boolean = false;
-  textStyleShow: boolean = false;
-  paintStyleShow: boolean = false;
-  published: boolean = false;
   zText: number = 3;
   zPaint: number = 2;
-  textPositionX: number = this.plt.width()/2;
-  textPositionY: number = 50;
-  lastTextPositionX: string;
-  lastTextPositionY: string;
-  reservationTime = 3; // Minutes
+  colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
   showRefresh: boolean = true;
+  published: boolean = false;
 
-  canvasTextValue: string = '';
+  // Background image
+  private imageSrc: string = '';
+  private imageDrawingSrc: string = '';
+  private imageTextSrc: string = '';
 
-  rock: FirebaseObjectObservable<any[]>;
-  storageRef;
+  // Signature pad
+  paintButtonColor = '';
+  lastPaintColor = '';
 
   private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 5,
     'canvasWidth': this.plt.width(),
   };
 
-  private imageSrc: string = '';
+  // Text tool
+  textButtonColor = '';
+  lastTextColor = '';
+  textColor = '';
+  textPlaceholder: string = '';
+  textValue: string = '';
+  textReadOnly: boolean = true;
+  textPositionX: number = this.plt.width()/2;
+  textPositionY: number = 50;
+  lastTextPositionX: string;
+  lastTextPositionY: string;
+  canvasTextValue: string = '';
 
-  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire, public alertCtrl: AlertController, public loadingCtrl: LoadingController) {
+  // Toolbar
+  toolbarShow: boolean = false;
+  textStyleShow: boolean = false;
+  paintStyleShow: boolean = false;
+  showTime: boolean = false;
+  
+  // Firebase related
+  reservationTime = 2; // Minutes
+  rock: FirebaseObjectObservable<any[]>;
+  storageRef;
+  
+  // Live Timer
+  timerStr: string = '';
+
+  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire, public alertCtrl: AlertController, public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
     this.rock = af.database.object('/rock1', { preserveSnapshot: true});
 
     this.rock.subscribe(snapshot => {
       //Need the line below to get rid of TypeScript compiler complaining about an error.
       var snap: any = snapshot;
       console.log(snap.val());
-      var t = this;
+
+      // get database entry for the image file path
       this.storageRef = firebaseApp.storage().ref().child(snap.val().image);
       
       // grab the time when the current rock was published
@@ -71,35 +85,56 @@ export class HomePage {
       var timeDiff = ((currentTime - publishTime)/1000)/60
       console.log(Math.floor(timeDiff));
 
-      var title = 'Rock Status:';
-      var subTitle;
-      var buttons;
+      // Set the date we're counting down to
+      var countDownDate = publishTime + (this.reservationTime*60*1000);
+      // Get todays date and time
+      var now = new Date().getTime();
+      // Find the distance between now an the count down date
+      var distance = countDownDate - now;
 
-      if (Math.floor(timeDiff) <= 1) {
-        subTitle = 'This rock was just painted.'
-        buttons = ['Ok']
-        // Hide toolbar, etc
-        this.published = true;
-      }
-      else if (timeDiff < this.reservationTime) {
-        // Hide toolbar, etc
-        this.published = true;
+      if (distance > 0) {
+        this.showTime = true;
+        // Update the count down every 1 second
 
-        subTitle = 'This rock was painted ' + Math.floor(timeDiff) + ' minutes ago.'
-        buttons = ['Ok']
+        var x = setInterval(function() {
+          // Time calculations for days, hours, minutes and seconds
+          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          t.timerStr = days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
+          distance = countDownDate - new Date().getTime();
+
+          // If the count down is finished, write some text 
+          if (distance < 0) {
+            clearInterval(x);
+            location.reload();
+          }
+        }, 1000);
       } else {
-        subTitle = 'This rock can be painted!'
-        buttons = ['Ok']
+        console.log("Hiding timer...");
+        this.showTime = false;
+        this.canvas.resize();
       }
 
-      let alert = this.alertCtrl.create({
-        title: title,
-        subTitle: subTitle,
-        buttons: buttons
-      })
-      alert.present();
+      if (timeDiff < this.reservationTime) {
+        // Hide toolbar, etc
+        this.published = true;
+      } else {
+        const toast = this.toastCtrl.create({
+          message: 'The Rock Can Be Painted!',
+          showCloseButton: true,
+          closeButtonText: 'Ok',
+          position: 'top',
+          duration: 10000,
+        });
+        toast.present();
+      }
 
+      var t = this;
       this.storageRef.getDownloadURL().then(function(url) {
+        // show what was last painted on the rock
         console.log(url);
         t.imageSrc = url;
         t.chRef.detectChanges();
@@ -122,6 +157,7 @@ export class HomePage {
     });*/
   }
 
+  // Pick background image
   openGallery (): void {
     let cameraOptions = {
       sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
@@ -133,20 +169,23 @@ export class HomePage {
       correctOrientation: true
     }
 
+    // retrieve image
     Camera.getPicture(cameraOptions)
-      .then(file_uri => this.imageSrc = file_uri, 
+    .then(file_uri => this.imageSrc = file_uri, 
       err => console.log(err));
   }
 
+  // adjust canvas height after view is rendered
   ionViewDidEnter() {
-    console.log(this.canvas.contentHeight);
+    console.log("Content height: " + this.canvas.contentHeight);
     this.canvasHeight = this.canvas.contentHeight + 'px';
     this.signaturePad.set('canvasHeight', this.canvas.contentHeight);
 
     this.canvasRef.nativeElement.setAttribute('height',this.canvas.contentHeight);
-    this.toolbarShow = true;
+    this.toolbarShow = false;
   }
 
+  /* SIGNATURE PAD FUNCTIONS START */
   ngAfterViewInit() {
     // this.signaturePad is now available
     // can set szimek/signature_pad options at runtime here
@@ -165,7 +204,9 @@ export class HomePage {
     // will be notified of szimek/signature_pad's onBegin event
     console.log('begin drawing');
   }
+  /* SIGNATURE PAD FUNCTIONS END */
 
+  // Reset canvas and signature pad
   clearRock() {
     this.signaturePad.clear();
     this.textValue = '';
@@ -174,29 +215,32 @@ export class HomePage {
     ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
     this.canvasTextValue = '';
   }
+
+  // Handles tool selection
   toggleStyleBar(toolStr) {
     if (toolStr == 'text') {
-        this.zText = 3;
-        this.zPaint = 2;
-        this.textStyleShow = !this.textStyleShow;
-        this.textButtonColor = this.lastTextColor;
-        this.paintStyleShow = false;
-        this.paintButtonColor = '';
-        this.textPlaceholder = 'Enter text...';
-        this.textReadOnly = false;
+      this.zText = 5;
+      this.zPaint = 4;
+      this.textStyleShow = !this.textStyleShow;
+      this.textButtonColor = this.lastTextColor;
+      this.paintStyleShow = false;
+      this.paintButtonColor = '';
+      this.textPlaceholder = 'Enter text...';
+      this.textReadOnly = false;
 
     } else if (toolStr == 'paint') {
-        this.zText = 2;
-        this.zPaint = 3;
-        this.paintStyleShow = !this.paintStyleShow;
-        this.paintButtonColor = this.lastPaintColor;
-        this.textStyleShow = false;
-        this.textButtonColor = '';
-        this.textPlaceholder = '';
-        this.textReadOnly = true;
+      this.zText = 4;
+      this.zPaint = 5;
+      this.paintStyleShow = !this.paintStyleShow;
+      this.paintButtonColor = this.lastPaintColor;
+      this.textStyleShow = false;
+      this.textButtonColor = '';
+      this.textPlaceholder = '';
+      this.textReadOnly = true;
     }
   }
 
+  // Change colors
   changeColorFromToolbar(color) {
     if (this.textStyleShow) {
       this.changeTextColor(color);
@@ -218,18 +262,22 @@ export class HomePage {
     this.updateText();
   }
 
-  canvasTapped(event) {
+  /* TEXT TOOL FUNCTIONS START */
+  // for positioning text
+  canvasTapped(tapEvent) {
     this.textPlaceholder = 'Enter text...';
-    this.textPositionX = event.srcEvent.offsetX;
-    this.textPositionY = event.srcEvent.offsetY;
+    //this.textPositionX = event.srcEvent.offsetX;
+    //this.textPositionY = event.srcEvent.offsetY;
+    //console.log(tapEvent);
+    this.textPositionX = tapEvent.center.x;
+    this.textPositionY = tapEvent.center.y;
     this.textReadOnly = true;
     this.updateText();
-
     
-        //var data = ctx.canvas.toDataURL();
-        //console.log(data);
+    //var data = ctx.canvas.toDataURL();
+    //console.log(data);
 
-        //console.log(this.canvasTextValue);
+    //console.log(this.canvasTextValue);
     //Focus as soon as you click(?)
     //Draggable?
   }
@@ -239,36 +287,40 @@ export class HomePage {
 
     ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
 
-        ctx.font = "30px Arial";
-        ctx.fillStyle = this.textColor;
-        ctx.fillText(this.canvasTextValue, this.textPositionX, this.textPositionY);
+    ctx.font = "30px Arial";
+    ctx.fillStyle = this.textColor;
+    ctx.fillText(this.canvasTextValue, this.textPositionX, this.textPositionY);
 
-        var dataText = ctx.canvas.toDataURL();
-        console.log("Text",dataText);
-        //window.open(dataText);
+    var dataText = ctx.canvas.toDataURL();
+    //console.log("Text",dataText);
+    //window.open(dataText);
 
-        var dataDraw = this.signaturePad.toDataURL();
-        console.log("SignaturePad",dataDraw);
-        //window.open(dataDraw);
+    var dataDraw = this.signaturePad.toDataURL();
+    //console.log("SignaturePad",dataDraw);
+    //window.open(dataDraw);
   }
 
   editText() {
     console.log("Allowing text to be editable...");
     this.textReadOnly = false;
   }
+  /* TEXT TOOL FUNCTIONS END */
 
-  refreshApp() {
-    location.reload();
-  }
-
+  // Firebase stuff
   publishRock() {
     this.published = true;
-    this.showRefresh = false;
     if (this.textValue) {
       this.textPlaceholder = '';
     }
     this.chRef.detectChanges();
     
+    let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
+    var dataDraw = this.signaturePad.toDataURL();
+    var dataText = ctx.canvas.toDataURL();
+
+    this.imageDrawingSrc = dataDraw;
+    this.imageTextSrc = dataText;
+
     var t = this;
     //Timeout guarantees that toolbar and placeholder disappear before screenshot
     setTimeout(function() {
@@ -288,10 +340,9 @@ export class HomePage {
         t.published = false;
 
         location.reload();
-      });
-      
+      }); 
     })
     .catch(err => { console.error(err); });
     }, 100);
-  }
+  }  
 }
