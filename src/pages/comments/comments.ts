@@ -9,17 +9,18 @@ import { AngularFire, FirebaseObjectObservable, FirebaseListObservable } from 'a
 	templateUrl: 'comments.html',
 })
 export class CommentsPage {
-	allComments: FirebaseObjectObservable<any>;
+	allComments: FirebaseListObservable<any>;
 	userComment: string = '';
 
 	constructor(public navCtrl: NavController, public af: AngularFire) {
-		this.allComments = this.af.database.object('comments/rock1');
+		this.allComments = this.af.database.list('comments/rock1');
 	}
 
 	postComment() {
 		console.log("Posting comment...");
 		if (this.userComment != '') {
-			this.allComments.update({ [new Date().getTime()]: this.userComment });
+			let newKey = new Date().getTime();
+			this.af.database.object(`/comments/rock1/${newKey}`).set(this.userComment);
 		}
 		this.userComment = '';
 	}

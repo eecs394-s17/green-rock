@@ -5,11 +5,8 @@
 </ion-header>
 <ion-content>
 <ion-list>
-	<ion-item text-wrap>
-	Sample comment.
-	</ion-item>
-	<ion-item text-wrap>
-	Another one.jkajsdl;falksdfj;laksdjfkl;asdjfklasjdl;kfajsdkl;fjasd;lkfja;klsdjflkasdjf;lasdj;fjasd;klfjasdlkfjasldkjf;aklsdjf;klasjdfklajsd;lfkajsd;flkajsdl;faksjdf;laksdjf;laskdjf;alsdkfjal;sdkfja;lsdkfja;sldkfja;lsdfkja;sdlkfja;lsdkja;fsd
+	<ion-item class="text" *ngFor="let comment of allComments | async">
+		{{comment.$value}}
 	</ion-item>
 </ion-list>
 </ion-content>
