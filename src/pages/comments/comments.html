@@ -4,5 +4,22 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-	Hello, World!
+<ion-list>
+	<ion-item text-wrap>
+	Sample comment.
+	</ion-item>
+	<ion-item text-wrap>
+	Another one.jkajsdl;falksdfj;laksdjfkl;asdjfklasjdl;kfajsdkl;fjasd;lkfja;klsdjflkasdjf;lasdj;fjasd;klfjasdlkfjasldkjf;aklsdjf;klasjdfklajsd;lfkajsd;flkajsdl;faksjdf;laksdjf;laskdjf;alsdkfjal;sdkfja;lsdkfja;sldkfja;lsdfkja;sdlkfja;lsdkja;fsd
+	</ion-item>
+</ion-list>
 </ion-content>
+<ion-footer>
+	<ion-toolbar>
+		<ion-input placeholder="Comment..." [(ngModel)]="userComment">{{ userComment }}</ion-input>
+		<ion-buttons end>
+			<button ion-button icon-only icon-right (tap)="postComment()">
+			  <ion-icon name="send"></ion-icon>
+			</button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-footer>

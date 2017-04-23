@@ -27,6 +27,7 @@ export class HomePage {
   colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
   showRefresh: boolean = true;
   published: boolean = false;
+  publishing: boolean = false;
 
   // Background image
   private imageSrc: string = '';
@@ -312,6 +313,7 @@ export class HomePage {
   // Firebase stuff
   publishRock() {
     this.published = true;
+    this.publishing = true;
     if (this.textValue) {
       this.textPlaceholder = '';
     }
@@ -341,6 +343,7 @@ export class HomePage {
         console.log(time);
         t.rock.set({ latitude: 1, longitude: 1, image: 'rock1.png', timestamp: time });
         t.published = false;
+        t.publishing = false;
 
         location.reload();
       }); 

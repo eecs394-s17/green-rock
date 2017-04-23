@@ -16,7 +16,7 @@
   <ion-fab right bottom *ngIf="!toolbarShow && !published">
     <button ion-fab (tap)="toolbarShow = true"><ion-icon name="create"></ion-icon></button>
   </ion-fab>
-  <ion-fab right bottom *ngIf="published">
+  <ion-fab right bottom *ngIf="published && !publishing">
     <button ion-fab (tap)="showComments()"><ion-icon name="text"></ion-icon></button>
   </ion-fab>
 </ion-content>
@@ -27,7 +27,7 @@
     </button>
     <div *ngIf="textStyleShow">
       <div class="textInput">
-        <ion-input type="text" [value]="canvasTextValue" [(ngModel)]="canvasTextValue" placeholder="{{ textPlaceholder }}"></ion-input>
+        <ion-input id="canvas-text-input" type="text" [value]="canvasTextValue" [(ngModel)]="canvasTextValue" placeholder="{{ textPlaceholder }}"></ion-input>
       </div>
       <ion-buttons id="submitText">
         <button ion-button (tap)="updateText()">Submit</button>
