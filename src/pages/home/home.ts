@@ -97,6 +97,7 @@ export class HomePage {
       var distance = countDownDate - now;
 
       if (distance > 0) {
+        this.published = true;
         this.showTime = true;
         // Update the count down every 1 second
 
@@ -113,27 +114,23 @@ export class HomePage {
           // If the count down is finished, write some text 
           if (distance < 0) {
             clearInterval(x);
+            console.log("Countdown Expired!");
             location.reload();
           }
         }, 1000);
       } else {
         console.log("Hiding timer...");
+        this.published = false;
         this.showTime = false;
-        this.canvas.resize();
-      }
-
-      if (timeDiff < this.reservationTime) {
-        // Hide toolbar, etc
-        this.published = true;
-      } else {
         const toast = this.toastCtrl.create({
           message: 'The Rock Can Be Painted!',
           showCloseButton: true,
           closeButtonText: 'Ok',
           position: 'top',
-          duration: 10000,
+          duration: 5000,
         });
         toast.present();
+        this.canvas.resize();
       }
 
       var t = this;
@@ -146,19 +143,6 @@ export class HomePage {
         console.log(error);
       });
     });
-/*
-    Keyboard.onKeyboardShow().subscribe(data => { 
-      this.lastTextPositionY = this.textPositionY;
-      this.lastTextPositionX = this.textPositionX;
-      this.textPositionX = '';
-      this.textPositionY = '50%';
-      chRef.detectChanges();
-    });
-
-    Keyboard.onKeyboardHide().subscribe(data => {
-      this.textPositionX = this.lastTextPositionX;
-      this.textPositionY = this.lastTextPositionY;
-    });*/
   }
 
   // Pick background image
@@ -312,7 +296,6 @@ export class HomePage {
 
   // Firebase stuff
   publishRock() {
-    this.published = true;
     this.publishing = true;
     if (this.textValue) {
       this.textPlaceholder = '';
@@ -342,10 +325,10 @@ export class HomePage {
         var time = (new Date().getTime());
         console.log(time);
         t.rock.set({ latitude: 1, longitude: 1, image: 'rock1.png', timestamp: time });
-        t.published = false;
+        t.published = true;
         t.publishing = false;
         t.af.database.list('comments/rock1').remove();
-        location.reload();
+        // location.reload();
       }); 
     })
     .catch(err => { console.error(err); });

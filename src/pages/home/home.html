@@ -1,6 +1,6 @@
 <ion-header *ngIf="showTime">
-  <ion-navbar color="dark">
-    <p style="color: white;text-align: center;">{{timerStr}}</p>
+  <ion-navbar color="dark" id="timerBar">
+      <p>{{timerStr}}</p>
   </ion-navbar>
 </ion-header>
 
@@ -13,15 +13,15 @@
     <canvas #canvastext id="canvas-text" [width]="canvasWidth" height="100" [style.zIndex]="zText" (tap)="canvasTapped($event)">
     </canvas>
   </div>
-  <ion-fab right bottom *ngIf="!toolbarShow && !published">
+  <ion-fab right bottom *ngIf="!toolbarShow && !publishing && !published">
     <button ion-fab (tap)="toolbarShow = true"><ion-icon name="create"></ion-icon></button>
   </ion-fab>
-  <ion-fab right bottom *ngIf="published && !publishing">
+  <ion-fab right bottom *ngIf="!publishing && published">
     <button ion-fab (tap)="showComments()"><ion-icon name="text"></ion-icon></button>
   </ion-fab>
 </ion-content>
 
-<ion-footer *ngIf="toolbarShow && !published">
+<ion-footer *ngIf="toolbarShow && !publishing && !published">
   <ion-toolbar color="dark" *ngIf="(textStyleShow || paintStyleShow) && toolbarShow">
     <button *ngFor="let color of colors" color="{{color}}" class="colorButton" ion-button icon-left (tap)="changeColorFromToolbar(color)">
     </button>
