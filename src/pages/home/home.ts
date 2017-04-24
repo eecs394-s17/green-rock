@@ -70,7 +70,7 @@ export class HomePage {
   // Live Timer
   timerStr: string = '';
 
-  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, af: AngularFire, public alertCtrl: AlertController, public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
+  constructor(@Inject(FirebaseApp) firebaseApp: any, public navCtrl: NavController, public plt: Platform, private chRef: ChangeDetectorRef, public af: AngularFire, public alertCtrl: AlertController, public loadingCtrl: LoadingController, public toastCtrl: ToastController) {
     this.rock = af.database.object('/rock1', { preserveSnapshot: true});
 
     this.rock.subscribe(snapshot => {
@@ -344,7 +344,7 @@ export class HomePage {
         t.rock.set({ latitude: 1, longitude: 1, image: 'rock1.png', timestamp: time });
         t.published = false;
         t.publishing = false;
-
+        t.af.database.list('comments/rock1').remove();
         location.reload();
       }); 
     })
