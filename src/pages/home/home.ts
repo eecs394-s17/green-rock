@@ -63,7 +63,7 @@ export class HomePage {
   showTime: boolean = false;
   
   // Firebase related
-  reservationTime = 2; // Minutes
+  reservationTime = 0.5; // Minutes
   rock: FirebaseObjectObservable<any[]>;
   storageRef;
   
@@ -342,5 +342,29 @@ export class HomePage {
 
   showComments() {
     this.navCtrl.push(CommentsPage);
+  }
+
+  showConfirm(){
+    var t = this;
+    let confirm = this.alertCtrl.create({
+          title: 'Use this lightsaber?',
+          message: 'Do you agree to use this lightsaber to do good across the intergalactic galaxy?',
+          buttons: [
+            {
+              text: 'Disagree',
+              handler: () => {
+                console.log('Disagree clicked');
+              }
+            },
+            {
+              text: 'Agree',
+              handler: () => {
+                console.log('Agree clicked');
+                t.publishRock();
+              }
+            }
+          ]
+        });
+    confirm.present();
   }
 }
