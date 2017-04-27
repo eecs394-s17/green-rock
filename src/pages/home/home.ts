@@ -304,6 +304,8 @@ export class HomePage {
       this.textPlaceholder = '';
     }
     this.chRef.detectChanges();
+    this.zPaint = 1;
+    this.zText = 1;
     
     let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
     var dataDraw = this.signaturePad.toDataURL();
