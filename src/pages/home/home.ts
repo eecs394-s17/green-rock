@@ -199,6 +199,8 @@ export class HomePage {
     this.signaturePad.clear();
     this.textValue = '';
     this.imageSrc = '';
+    this.imageDrawingSrc = '';
+    this.imageTextSrc = '';
     let ctx: CanvasRenderingContext2D = this.canvasRef.nativeElement.getContext('2d');
     ctx.clearRect(0, 0, this.canvasWidth, this.canvas.contentHeight);
     this.canvasTextValue = '';
@@ -277,6 +279,7 @@ export class HomePage {
 
     ctx.font = "30px Arial";
     ctx.fillStyle = this.textColor;
+    ctx.textAlign = 'center';
     ctx.fillText(this.canvasTextValue, this.textPositionX, this.textPositionY);
 
     var dataText = ctx.canvas.toDataURL();
