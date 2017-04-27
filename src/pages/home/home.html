@@ -49,7 +49,7 @@
     <ion-buttons end>
       <button ion-button (tap)="toolbarShow = false" icon-right>Hide</button>
       <button ion-button (tap)="clearRock()" icon-right>Clear</button>
-      <button ion-button icon-right (tap)="publishRock()">Publish!<ion-icon name="send"></ion-icon></button>
+      <button showWhen="android,ios" ion-button icon-right (tap)="publishRock()">Publish!<ion-icon name="send"></ion-icon></button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
