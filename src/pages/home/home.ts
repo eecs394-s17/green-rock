@@ -24,6 +24,8 @@ export class HomePage {
   canvasWidth = this.plt.width();
   zText: number = 3;
   zPaint: number = 2;
+  oldZText: number = 3;
+  oldZPaint: number = 2;
   colors = ['red', 'blue', 'green', 'yellow', 'black', 'white'];
   showRefresh: boolean = true;
   published: boolean = false;
@@ -63,7 +65,7 @@ export class HomePage {
   showTime: boolean = false;
   
   // Firebase related
-  reservationTime = 2; // Minutes
+  reservationTime = 0.5; // Minutes
   rock: FirebaseObjectObservable<any[]>;
   storageRef;
   
@@ -114,22 +116,33 @@ export class HomePage {
           // If the count down is finished, write some text 
           if (distance < 0) {
             clearInterval(x);
+            t.published = false;
+            t.showTime = false;
+            t.zPaint = t.oldZPaint;
+            t.zText = t.oldZText;
+            const readyToast = t.toastCtrl.create({
+              message: 'The Rock Can Be Painted!',
+              showCloseButton: true,
+              closeButtonText: 'Ok',
+              position: 'top',
+              duration: 5000,
+            });
+            readyToast.present();
             console.log("Countdown Expired!");
-            location.reload();
           }
         }, 1000);
       } else {
         console.log("Hiding timer...");
         this.published = false;
         this.showTime = false;
-        const toast = this.toastCtrl.create({
+        const readyToast = this.toastCtrl.create({
           message: 'The Rock Can Be Painted!',
           showCloseButton: true,
           closeButtonText: 'Ok',
           position: 'top',
           duration: 5000,
         });
-        toast.present();
+        readyToast.present();
         this.canvas.resize();
       }
 
@@ -304,6 +317,8 @@ export class HomePage {
       this.textPlaceholder = '';
     }
     this.chRef.detectChanges();
+    this.oldZPaint = this.zPaint;
+    this.oldZText = this.zText;
     this.zPaint = 1;
     this.zText = 1;
     
